@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+
+Sitemap: YOUR_PUBLIC_SITE_URL/sitemap.xml
+
+# 다음 웹마스터도구 인증 코드는 발급받은 뒤 이 줄 아래에 그대로 붙이세요.
