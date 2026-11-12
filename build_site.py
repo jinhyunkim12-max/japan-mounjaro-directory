@@ -4,7 +4,7 @@ from html import escape
 from pathlib import Path
 from urllib.parse import quote
 
-SITE_URL = "YOUR_PUBLIC_SITE_URL"
+SITE_URL = "https://japan-mounjaro-directory.netlify.app"
 SITE_NAME = "마운자로 원정대"
 ROOT = Path(__file__).resolve().parent
 

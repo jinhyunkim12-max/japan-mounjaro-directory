@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>YOUR_PUBLIC_SITE_URL/</loc>
+    <loc>https://japan-mounjaro-directory.netlify.app/</loc>
     <lastmod>2026-11-12</lastmod>
   </url>
   <url>
-    <loc>YOUR_PUBLIC_SITE_URL/support.html</loc>
+    <loc>https://japan-mounjaro-directory.netlify.app/support.html</loc>
     <lastmod>2026-11-12</lastmod>
   </url>
 </urlset>
