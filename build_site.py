@@ -655,6 +655,7 @@ def directory():
         </summary>
         <div class="clinic-grid">{cards}
         </div>
+        <p class="city-page-link"><a href="/{city_id}/">{name} 마운자로 병원 페이지</a></p>
       </details>"""
         )
     return "\n".join(nav), "\n".join(parts)
@@ -688,7 +689,7 @@ def head(title, description, path):
   <title>{e(title)}</title>
   <link rel="canonical" href="{e(url)}">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="/styles.css?v=16">
+  <link rel="stylesheet" href="/styles.css?v=17">
   <link rel="sitemap" type="application/xml" href="/sitemap.xml">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="ko_KR">
@@ -696,6 +697,7 @@ def head(title, description, path):
   <meta property="og:title" content="{e(title)}">
   <meta property="og:description" content="{e(description)}">
   <meta property="og:url" content="{e(url)}">
+  <meta property="og:image" content="{SITE_URL}/mascot.jpg">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="{e(title)}">
   <meta name="twitter:description" content="{e(description)}">
@@ -703,7 +705,7 @@ def head(title, description, path):
 """
 
 
-INDEX_DESC = "도쿄·오사카·후쿠오카·삿포로·나고야·교토·지바의 의료기관이 공개한 마운자로 온라인 상담 정보와 연락처를 정리한 독립 정보 디렉터리입니다. 한국 체류 중 상담 가능 여부는 각 기관 공식 페이지의 문구를 옮겼습니다."
+INDEX_DESC = "일본 도쿄·오사카·후쿠오카 등 7개 도시의 마운자로 관련 의료기관 정보를 한국어로 확인하세요. 공식 홈페이지, 온라인 상담 안내, 한국어 진료 여부, 연락처와 진료 정보를 정리했습니다. 처방 여부는 의료진의 판단에 따릅니다."
 
 FX_API = "https://api.frankfurter.dev/v1/latest?from=JPY&to=KRW"
 # dose, Korea pharmacy average (4 pens, my-doctor 2026-11-12), reported supply price, Japan NHI price per kit.
@@ -727,6 +729,16 @@ def fetch_fx():
         return None, None
 
 
+_FX_CACHE = None
+
+
+def fx_once():
+    global _FX_CACHE
+    if _FX_CACHE is None:
+        _FX_CACHE = fetch_fx()
+    return _FX_CACHE
+
+
 def fx_tab(per_jpy, fx_date):
     if per_jpy and fx_date:
         value = f"{per_jpy * 100:,.2f}원"
@@ -734,7 +746,7 @@ def fx_tab(per_jpy, fx_date):
     else:
         value = "확인 중"
         date_text = ""
-    return f"""<a class="fx-side" href="#prices" title="100엔 기준 유럽중앙은행 고시. 카드사나 의료기관 청구 환율이 아닙니다. 주말과 공휴일은 직전 영업일입니다.">
+    return f"""<a class="fx-side" href="/guides/cost/#prices" title="100엔 기준 유럽중앙은행 고시. 카드사나 의료기관 청구 환율이 아닙니다. 주말과 공휴일은 직전 영업일입니다.">
     <span class="fx-side-kicker">참고 환율</span>
     <span class="fx-side-unit">100엔</span>
     <strong data-fx-value>{value}</strong>
@@ -742,7 +754,7 @@ def fx_tab(per_jpy, fx_date):
   </a>"""
 
 
-def price_section(per_jpy):
+def price_section(per_jpy, expanded=False):
     rows = []
     for dose, average, supply, kit in DOSE_ROWS:
         four = kit * 4
@@ -758,7 +770,7 @@ def price_section(per_jpy):
         )
     return f"""<section id="prices">
       <div class="wrap">
-        <details class="fold">
+        <details class="fold"{' open' if expanded else ''}>
           <summary>용량별 한·일 가격 추산</summary>
           <p class="price-lead">4주분(주 1회 × 4) 참고 금액입니다. 병원·약국·카드사가 청구하는 정확한 가격이 아니고, 어디가 싼지 고르라는 비교도 아닙니다.</p>
           <div class="price-wrap">
@@ -791,7 +803,7 @@ SUPPORT_DESC = "이 안내가 도움이 되셨다면 개발자에게 커피 한 
 
 
 def build_index():
-    per_jpy, fx_date = fetch_fx()
+    per_jpy, fx_date = fx_once()
     fx_html = fx_tab(per_jpy, fx_date)
     price_html = price_section(per_jpy)
     nav, sections = directory()
@@ -802,12 +814,12 @@ def build_index():
             f'<button class="chip" type="button" data-city-filter="{city_id}" aria-pressed="false">{e(name)} {count}</button>'
         )
     chip_html = "\n".join(chips)
-    html = head(f"{SITE_NAME} | 일본 공개 진료 정보", INDEX_DESC, "/")
+    html = head("일본 마운자로 병원·온라인 상담 정보 총정리 | 마운자로 원정대", INDEX_DESC, "/")
     html += f"""  <script type="application/ld+json">
   {{
     "@context": "https://schema.org",
     "@type": "WebPage",
-    "name": "{SITE_NAME}",
+    "name": "일본 마운자로 병원 및 온라인 상담 정보",
     "inLanguage": "ko",
     "isAccessibleForFree": true,
     "url": "{SITE_URL}/",
@@ -843,7 +855,7 @@ def build_index():
             </div>
             <div>
               <p class="eyebrow">일본 공개 진료 정보를 모은 목록</p>
-              <h1 id="page-title">{SITE_NAME}</h1>
+              <h1 id="page-title">일본 마운자로 병원 및 온라인 상담 정보</h1>
             </div>
           </div>
           <p class="hero-copy">공식 페이지에 공개된 마운자로 온라인 상담 정보와 연락처를 도시별로 모았습니다. 상담과 처방은 의료진 판단에 달려 있습니다. 이 사이트는 일본 의료기관의 공식 웹사이트, 광고, 제휴 서비스가 아닌 독립 정보 안내입니다.</p>
@@ -885,6 +897,7 @@ def build_index():
           </div>
           <p class="section-intro">도시를 누르면 그 도시의 기관만 펼쳐집니다. 기관 이름의 상세를 누르면 주소와 연락처가 나옵니다. 나열 순서는 자료를 정리한 순서이며 순위가 아닙니다.</p>
         </div>
+        {seo_nav()}
         <p id="filter-empty" hidden>해당하는 기관이 없습니다.</p>
         <nav aria-label="도시 바로가기"><ul class="city-nav">{nav}</ul></nav>
         {sections}
@@ -1016,7 +1029,7 @@ def build_index():
     <a class="meal-side" href="/support.html"><span class="meal-emoji" aria-hidden="true">☕</span><span class="meal-label">커피 한 잔</span></a>
   </div>
   <script src="/filter.js?v=3"></script>
-  <script src="/rate.js?v=3"></script>
+  <script src="/rate.js?v=4"></script>
   <script src="/copy.js"></script>
 </body>
 </html>
@@ -1076,7 +1089,7 @@ def build_404():
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex">
   <title>페이지를 찾을 수 없습니다 | 마운자로 원정대</title>
-  <link rel="stylesheet" href="/styles.css?v=16">
+  <link rel="stylesheet" href="/styles.css?v=17">
 </head>
 <body>
   <main class="missing">
@@ -1089,12 +1102,324 @@ def build_404():
 """
 
 
+def seo_nav():
+    city_links = []
+    for city_id, name, _en in CITIES:
+        city_links.append(f'<a href="/{city_id}/">{e(name)} 마운자로 병원</a>')
+    guides = [
+        ("/guides/prescription/", "처방 주의사항"),
+        ("/guides/korea-stay/", "한국 체류 중 상담"),
+        ("/guides/korean-care/", "한국어 진료"),
+        ("/guides/cost/", "비용 확인"),
+        ("/about/", "정보 수집 기준"),
+    ]
+    guide_links = "".join(f'<a href="{href}">{label}</a>' for href, label in guides)
+    return (
+        f'<nav class="city-pages" aria-label="도시별 페이지">{"".join(city_links)}</nav>'
+        f'<nav class="guide-links" aria-label="주제별 안내">{guide_links}</nav>'
+    )
+
+
+def site_header():
+    return f"""<a class="skip" href="#content">본문으로 건너뛰기</a>
+  <header class="topbar">
+    <div class="wrap nav">
+      <a class="brand" href="/"><span class="brand-mark" aria-hidden="true">원</span><span>{SITE_NAME}</span></a>
+      <nav aria-label="주요 메뉴">
+        <ul class="nav-links">
+          <li><a href="/#directory">도시별 목록</a></li>
+          <li><a href="/guides/cost/">가격 추산</a></li>
+          <li><a href="/guides/korean-care/">한국어 진료</a></li>
+          <li><a href="/guides/prescription/">주의사항</a></li>
+          <li><a href="/about/">수집 기준</a></li>
+          <li><a class="meal-nav" href="/support.html"><span class="meal-emoji" aria-hidden="true">☕</span> 커피 한 잔</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>"""
+
+
+def site_close():
+    per_jpy, fx_date = fx_once()
+    fx_html = fx_tab(per_jpy, fx_date)
+    return f"""<footer class="site-footer">
+    <div class="wrap">
+      <section class="legal-cushion" aria-labelledby="legal-cushion-title">
+        <h2 id="legal-cushion-title">법적 유의사항</h2>
+        <p>본 페이지는 각 기관이 공개한 자료를 모은 독립 정보 안내입니다. 의료기관이 아니고, 법률 자문이나 행정기관의 공식 해석도 아닙니다. 진료·처방·예약·의약품 판매를 하지 않으며, 특정 기관을 권하거나 순위를 매기지 않습니다.</p>
+        <p>수록 정보는 실시간으로 바뀔 수 있고, 공식 페이지의 현재 내용과 다를 수 있습니다. 상담·처방 가능 여부와 법령의 적용은 각 기관과 관계 당국의 공식 안내에서 확인해야 합니다. 이 페이지를 보고 한 판단과 그 결과는 이용자 본인에게 있습니다. 이 문구는 법적 책임을 면하게 해 주는 법률 의견이 아닙니다.</p>
+      </section>
+      <p class="tip-line"><span aria-hidden="true">📬</span> <strong>제보</strong> 틀린 곳이나 바뀐 내용이 있으면 알려 주세요. <a href="mailto:moonblind@daum.net">moonblind@daum.net</a></p>
+      <div class="footer-inner">
+        <p>독립 정보 안내 · 의료기관과 비제휴 · 광고 없음 · 법적 분류는 확정되지 않음</p>
+        <p><a href="/about/">정보 수집 기준</a> · <a href="/support.html"><span class="meal-emoji" aria-hidden="true">☕</span> 개발자에게 커피 한 잔</a> · 의료 조언이 아닙니다.</p>
+      </div>
+    </div>
+  </footer>
+  <div class="side-stack">
+    {fx_html}
+    <a class="meal-side" href="/support.html"><span class="meal-emoji" aria-hidden="true">☕</span><span class="meal-label">커피 한 잔</span></a>
+  </div>
+  <script src="/filter.js?v=3"></script>
+  <script src="/rate.js?v=4"></script>
+  <script src="/copy.js"></script>
+</body>
+</html>"""
+
+
+def crumb_html(items):
+    parts = []
+    for index, (name, path) in enumerate(items):
+        if index == len(items) - 1:
+            parts.append(f'<span aria-current="page">{e(name)}</span>')
+        else:
+            parts.append(f'<a href="{path}">{e(name)}</a>')
+    return " / ".join(parts)
+
+
+def crumb_json(items):
+    payload = {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": index,
+                "name": name,
+                "item": f"{SITE_URL}{path}",
+            }
+            for index, (name, path) in enumerate(items, start=1)
+        ],
+    }
+    return json.dumps(payload, ensure_ascii=False)
+
+
+def subpage(title, description, path, crumbs, body, extra_json=""):
+    scripts = f"""  <script type="application/ld+json">
+  {crumb_json(crumbs)}
+  </script>"""
+    if extra_json:
+        scripts += f"""
+  <script type="application/ld+json">
+  {extra_json}
+  </script>"""
+    return f"""{head(title, description, path)}{scripts}
+</head>
+<body>
+  {site_header()}
+  <main class="guide" id="content">
+    <div class="wrap">
+      <p class="crumb">{crumb_html(crumbs)}</p>
+      {body}
+    </div>
+  </main>
+  {site_close()}"""
+
+
+CITY_COPY = {
+    "tokyo": (
+        "도쿄의 마운자로 공개 안내 6곳입니다. 세타가야 Mirai는 한국 체류 중 상담을, Japan Net Clinic은 한국인 의사 진료를 안내합니다. 나머지 상담 조건은 기관마다 다릅니다.",
+        """<p>도쿄에서 확인한 기관은 주오구, 미나토구, 도시마구, 세타가야구에 있습니다. 긴자·니혼바시·신바시·세타가야가 같은 상담 조건을 안내하는 것은 아닙니다.</p>
+        <p>세타가야 Mirai Medical Clinic 공식 페이지는 한국에 있을 때의 상담을 안내하고, 약은 일본 숙소에서 받는다고 적습니다. 후쿠오카 하카타의 Mirai Medical Clinic과는 다른 기관입니다.</p>
+        <p>Japan Net Clinic 공식 페이지는 한국인 의사가 한국어·영어·일본어로 진료한다고 적습니다. 한국 거주자에게 확인된 문장은 일본에 머무는 동안의 진료이고, 한국에 있는 상태의 원격 진료로 확인되지는 않았습니다.</p>
+        <p>니혼바시 클리닉은 영어·일본어 상담을 안내하고, 신바시 긴자 스위프트는 영문 페이지가 있습니다. 이 두 곳과 Drip Medical, Tokyo Online Clinic은 한국 체류 중 상담이 공식 안내에서 확인되지 않았습니다.</p>""",
+    ),
+    "osaka": (
+        "오사카의 마운자로 공개 안내 4곳입니다. MIL CLINIC OSAKA는 비거주자의 출발 전 상담을 일본어·영어로 안내합니다. 신사이바시·우메다의 다른 기관은 한국 체류 중 상담이 확인되지 않았습니다.",
+        """<p>오사카 페이지의 기관은 신사이바시·우메다 일대입니다. 네 곳의 언어와 상담 조건은 같지 않습니다.</p>
+        <p>MIL CLINIC OSAKA 공식 페이지는 일본에 거주하지 않는 사람의 출발 전 온라인 상담을 안내하고, 언어는 일본어·영어라고 적습니다. 한국에서만 가능하다거나 한국어 진료가 된다고 적혀 있지는 않습니다.</p>
+        <p>다이비카이 신사이바시, Ai Clinic, ONE CLINIC 우메다는 한국 체류 중 상담과 한국어 진료가 공식 안내에서 확인되지 않았습니다.</p>""",
+    ),
+    "fukuoka": (
+        "후쿠오카의 마운자로 공개 안내 4곳입니다. FONTANA CLINIC Tenjin만 한국 체류 중 상담과 한국어 대응을 안내합니다. 하카타 Mirai는 세타가야 Mirai와 다른 기관입니다.",
+        """<p>후쿠오카에서 확인한 기관은 하카타구와 텐진이 있는 주오구에 있습니다.</p>
+        <p>FONTANA CLINIC Tenjin 공식 페이지는 한국어 대응 스태프가 매일 있다고 적습니다. 한국에 머무는 동안의 예약과 온라인 상담을 안내하고, 약은 일본 호텔로 받는다고 적습니다. 직원 국적은 확인되지 않았습니다.</p>
+        <p>하카타의 Mirai Medical Clinic은 miraimedical.com을 쓰는 기관이고, 세타가야의 Mirai Medical Clinic과는 다릅니다. 하카타 Mirai, M Medical Clinic, 클라라 뷰티 클리닉 텐진은 한국 체류 중 상담이 공식 안내에서 확인되지 않았습니다.</p>""",
+    ),
+    "kyoto": (
+        "교토의 마운자로 공개 안내 3곳입니다. 가라스마·시모교구 기관이며, 한국 체류 중 상담과 한국어 진료는 공식 페이지에서 확인되지 않았습니다.",
+        """<p>교토 페이지의 세 기관은 모두 시모교구입니다. 가라스마에 두 곳, 내과 의원이 한 곳입니다.</p>
+        <p>가지야마 내과, 교토 가라스마 버팔로, 다이비카이 교토 가라스마 모두 한국 체류 중 상담과 한국어 진료가 공식 안내에서 확인되지 않았습니다. 확인되지 않았다는 뜻은 불가능하다는 판정과 다릅니다.</p>""",
+    ),
+    "nagoya": (
+        "나고야의 마운자로 공개 안내 3곳입니다. 나카구·나카무라구 기관이며, 한국 체류 중 상담은 공식 안내에서 확인되지 않았습니다.",
+        """<p>나고야에서 확인한 기관은 나카무라구 두 곳과 나카구 한 곳입니다.</p>
+        <p>벨바에르 혼진, MARU Clinic, 호소카와 외과는 한국 체류 중 상담과 한국어 진료가 공식 안내에서 확인되지 않았습니다. 각 카드의 공식 페이지에서 현재 문장을 다시 확인해야 합니다.</p>""",
+    ),
+    "sapporo": (
+        "삿포로의 마운자로 공개 안내 2곳입니다. 기타구·주오구 기관이며, 한국 체류 중 상담과 한국어 진료는 공식 페이지에서 확인되지 않았습니다.",
+        """<p>삿포로 페이지에는 기타구의 클라라 뷰티 클리닉과 주오구의 아스테리아 클리닉이 있습니다.</p>
+        <p>두 곳 모두 한국 체류 중 상담과 한국어 진료가 공식 안내에서 확인되지 않았습니다. 다른 도시의 클라라 후쿠오카 텐진과는 별도 기관입니다.</p>""",
+    ),
+    "chiba": (
+        "지바의 마운자로 공개 안내는 HANI CLINIC 1곳입니다. 한국에 있을 때의 상담 문장이 있지만, 이용약관은 일본에서 서비스를 이용하는 사람을 대상으로 적습니다.",
+        """<p>지바 페이지에 올린 마운자로 안내는 이치카와시의 HANI CLINIC뿐입니다.</p>
+        <p>공식 페이지는 한국에 있을 때와 일본에 있을 때의 상담을 안내합니다. 다만 이용약관은 서비스를 일본에서 이용하는 사람을 이용자로 적고 있습니다. 한국어 진료 가능 여부는 그 문장만으로 확인되지 않았습니다.</p>""",
+    ),
+}
+
+
+def build_city(city_id):
+    name = CITY_NAME[city_id]
+    en = next(en_name for cid, _name, en_name in CITIES if cid == city_id)
+    description, intro = CITY_COPY[city_id]
+    group = [clinic for clinic in CLINICS if clinic["city"] == city_id]
+    title = f"{name} 마운자로 병원 및 상담 정보 | {SITE_NAME}"
+    path = f"/{city_id}/"
+    cards = "".join(card(clinic) for clinic in group)
+    others = "".join(
+        f'<a href="/{cid}/">{cname} 마운자로 병원</a>'
+        for cid, cname, _en in CITIES
+        if cid != city_id
+    )
+    listed = ", ".join(clinic["name"] for clinic in group)
+    item_list = {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        "name": f"{name} 마운자로 공개 진료 안내",
+        "numberOfItems": len(group),
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": index,
+                "name": clinic["name"],
+                "url": f"{SITE_URL}{path}#{city_id}-{clinic['name'].lower().replace(' ', '-')}",
+            }
+            for index, clinic in enumerate(group, start=1)
+        ],
+    }
+    body = f"""<p class="eyebrow">{e(en)}</p>
+      <h1>{e(name)} 마운자로 병원 및 상담 정보</h1>
+      {intro}
+      <p>수록 기관은 {e(listed)}입니다. 나열 순서는 순위가 아니고, 상담과 처방은 각 의료진의 판단에 따릅니다.</p>
+      <div class="clinic-grid">{cards}</div>
+      <h2>다른 도시</h2>
+      <nav class="city-pages" aria-label="다른 도시 페이지">{others}</nav>"""
+    return subpage(title, description, path, [("마운자로 원정대", "/"), (name, path)], body, json.dumps(item_list, ensure_ascii=False))
+
+
+def build_prescription():
+    body = """<h1>일본 마운자로 처방 절차와 주의사항</h1>
+      <p>이 페이지는 처방 절차를 대신 진행하지 않습니다. 각 의료기관의 공식 페이지에 적힌 범위만 정리합니다. 상담을 했다고 처방이 보장되지는 않습니다.</p>
+      <h2>공식 안내에서 반복되는 한계</h2>
+      <p>일본 후생노동성은 온라인 진료가 모든 환자에게 가능한 것은 아니며, 의사가 처방하지 않을 수 있다고 안내합니다. 의사가 온라인 진료가 적절하지 않다고 보면 진료를 중단하거나 대면 진료를 안내할 수 있습니다.</p>
+      <p>마운자로는 처방의약품입니다. 후생노동성은 제2형 당뇨병 치료제가 미용·체중감량 목적으로 쓰일 때 안전성과 유효성이 확인되지 않았다고 경고합니다. 이 사이트는 사용이나 체중감량을 권하지 않습니다.</p>
+      <h2>한국으로의 반입</h2>
+      <p>식품의약품안전처와 관세청은 우편·특송으로 받는 직접구매를 허용하지 않는다고 밝혔습니다. 2026년 11월 12일부터 허용한다고 밝힌 범위는, 해외에서 정상적으로 처방·구매한 자가 치료용 의약품을 본인이 휴대 반입하는 경우입니다. 모든 반입이 허용된다는 뜻이 아닙니다.</p>
+      <p><a href="https://www.mhlw.go.jp/stf/newpage_38226.html" target="_blank" rel="noopener noreferrer">후생노동성 온라인 진료 안내</a> · <a href="https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/iyakuhin/kojinyunyu/index_00003.html" target="_blank" rel="noopener noreferrer">후생노동성 안전 안내</a> · <a href="https://www.yna.co.kr/view/AKR20261111158151017" target="_blank" rel="noopener noreferrer">연합뉴스</a> · <a href="https://www.mfds.go.kr/brd/m_99/view.do?seq=50487" target="_blank" rel="noopener noreferrer">식약처 보도자료</a></p>
+      <p><a href="/guides/korea-stay/">한국 체류 중 상담이 안내된 기관</a>과 <a href="/guides/cost/">비용 확인 시 주의점</a>은 별도 페이지에 두었습니다.</p>"""
+    return subpage(
+        f"일본 마운자로 처방 주의사항 | {SITE_NAME}",
+        "일본 마운자로 상담이 처방을 보장하지 않는 이유, 후생노동성 안전 안내, 한국 휴대 반입과 직구의 차이를 공식 자료 기준으로 정리했습니다.",
+        "/guides/prescription/",
+        [("마운자로 원정대", "/"), ("처방 주의사항", "/guides/prescription/")],
+        body,
+    )
+
+
+def build_korea_stay():
+    body = """<h1>한국에서 일본 온라인 진료를 받을 수 있을까?</h1>
+      <p>한국어로 응대한다는 안내와, 한국에 있는 상태에서 원격 진료를 할 수 있다는 안내는 다른 내용입니다. 아래는 2026년 11월 12일에 공식 페이지에서 확인한 구분입니다. 확인되지 않음은 불가능이라는 뜻이 아닙니다.</p>
+      <h2>한국에 있을 때의 상담 문장이 있는 곳</h2>
+      <ul>
+        <li><a href="/chiba/#chiba-hani-clinic">HANI CLINIC</a> 공식 페이지는 한국에 있을 때와 일본에 있을 때의 상담을 안내합니다. 이용약관은 서비스를 일본에서 이용하는 사람을 이용자로 적습니다.</li>
+        <li><a href="/fukuoka/#fukuoka-fontana-clinic-tenjin">FONTANA CLINIC Tenjin</a>은 한국에 머무는 동안의 예약·온라인 상담을 안내하고, 약은 일본 호텔로 받는다고 적습니다.</li>
+        <li><a href="/tokyo/#tokyo-mirai-medical-clinic-setagaya">세타가야 Mirai Medical Clinic</a>은 한국에서 상담하고 약은 일본 숙소에서 받는 안내가 있습니다. 후쿠오카 Mirai와는 다른 기관입니다.</li>
+      </ul>
+      <h2>한국 체류 중 상담으로 두지 않은 곳</h2>
+      <p><a href="/osaka/#osaka-mil-clinic-osaka">MIL CLINIC OSAKA</a>는 일본 비거주자의 출발 전 상담을 일본어·영어로 안내합니다. 한국 전용이나 한국어 진료 안내는 확인되지 않았습니다.</p>
+      <p><a href="/tokyo/#tokyo-japan-net-clinic">Japan Net Clinic</a>은 한국어 진료를 안내하지만, 한국 거주자에게 확인된 답변은 일본에 머무는 동안의 진료입니다.</p>
+      <p>나머지 기관은 한국 체류 중 상담 가능 여부가 공식 안내에서 확인되지 않았습니다. 도시별 원문은 <a href="/tokyo/">도쿄</a>, <a href="/osaka/">오사카</a>, <a href="/fukuoka/">후쿠오카</a>, <a href="/kyoto/">교토</a>, <a href="/nagoya/">나고야</a>, <a href="/sapporo/">삿포로</a>, <a href="/chiba/">지바</a> 페이지에 있습니다.</p>"""
+    return subpage(
+        f"한국 체류 중 일본 마운자로 상담 | {SITE_NAME}",
+        "한국에 있는 상태의 원격 상담이 공식 페이지에 안내된 기관과, 일본 체류 중 진료·출발 전 상담으로만 확인된 기관을 구분했습니다.",
+        "/guides/korea-stay/",
+        [("마운자로 원정대", "/"), ("한국 체류 중 상담", "/guides/korea-stay/")],
+        body,
+    )
+
+
+def build_korean_care():
+    body = """<h1>일본 의료기관의 한국어 진료 안내</h1>
+      <p>한국어 진료 안내가 있어도 한국에 있는 환자의 원격 진료가 된다는 뜻은 아닙니다. 직원 국적과 상주 여부도, 그 문장만으로 확정하지 않습니다.</p>
+      <h2>마운자로 목록에서 한국어 안내가 확인된 곳</h2>
+      <ul>
+        <li><a href="/tokyo/#tokyo-japan-net-clinic">Japan Net Clinic</a>은 진료하는 의사가 한국인이며 한국어·영어·일본어로 진료한다고 적습니다. 다른 직원의 국적과 상주는 확인되지 않았습니다.</li>
+        <li><a href="/fukuoka/#fukuoka-fontana-clinic-tenjin">FONTANA CLINIC Tenjin</a>은 한국어 대응 스태프가 매일 있다고 적습니다. 한국인 국적의 직원이 상주한다는 확인은 아닙니다.</li>
+        <li><a href="/tokyo/#tokyo-mirai-medical-clinic-setagaya">세타가야 Mirai</a>는 예약·진료·사후 상담을 한국어로 진행한다고 적습니다. 직원 국적은 확인되지 않았습니다.</li>
+      </ul>
+      <h2>마운자로 목록에 넣지 않은 한국어 안내</h2>
+      <p>GLOBE Clinic Shinjuku 공식 한국어 페이지는 일본을 방문한 외국인, 재일 외국인, 호텔 투숙객의 한국어 온라인 진료를 안내합니다. 한국에 있는 환자의 진료 문장과 마운자로 처방 안내는 확인되지 않았습니다. 통역 스태프의 국적도 확인되지 않았습니다.</p>
+      <p>TOKYO IBIKI CLINIC INTERNATIONAL 공식 한국어 페이지는 관광객 진료, 호텔 왕진, 영어·중국어·한국어 대응을 안내합니다. 한국에서의 원격 진료와 마운자로라는 이름은 확인되지 않았습니다. 같은 페이지에 목요일 휴진과 연중무휴가 함께 적혀 있습니다.</p>
+      <p>도쿄도 보건의료국의 외국인 환자 언어 지원 목록은 마운자로 처방이나 한국 체류 중 상담을 확인해 주는 자료가 아니므로 이 디렉터리의 기관 목록에 넣지 않았습니다.</p>
+      <p><a href="https://www.globe-clinic.jp/kr/telemedicine/" target="_blank" rel="noopener noreferrer">GLOBE 한국어 페이지</a> · <a href="https://international-tokyo.com/ko/" target="_blank" rel="noopener noreferrer">IBIKI 한국어 페이지</a></p>"""
+    return subpage(
+        f"일본 마운자로 한국어 상담 | {SITE_NAME}",
+        "한국어 진료 안내와 한국 체류 중 원격 상담을 구분합니다. 한국인 의사, 한국어 대응 스태프, 마운자로 목록에 넣지 않은 기관을 공식 문장 기준으로 적었습니다.",
+        "/guides/korean-care/",
+        [("마운자로 원정대", "/"), ("한국어 진료", "/guides/korean-care/")],
+        body,
+    )
+
+
+def build_cost():
+    per_jpy, _fx_date = fx_once()
+    body = f"""<h1>일본 마운자로 비용 확인 시 주의할 점</h1>
+      <p>용량별 금액은 공개된 약가·공급가·수집 평균을 나란히 둔 추산입니다. 병원, 약국, 카드사가 청구하는 정확한 가격이 아니고, 더 싼 쪽을 고르라는 비교도 아닙니다.</p>
+      {price_section(per_jpy, expanded=True)}
+      <h2>이 표로 알 수 없는 것</h2>
+      <p>일본 칸은 자유진료 병원의 청구 평균이 아닙니다. 후생노동성 보험 약가입니다. 체중 감량 목적의 자유진료비는 기관마다 따로 정하므로, 도시별 카드의 공식 페이지에서 현재 안내를 확인해야 합니다. 진료비, 검사비, 환전 수수료는 표에 더하지 않았습니다.</p>
+      <p>오른쪽 환율 칸은 유럽중앙은행 고시이며, 카드사나 의료기관 청구 환율이 아닙니다. <a href="/guides/prescription/">반입과 처방 주의사항</a>도 함께 보세요.</p>"""
+    return subpage(
+        f"일본 마운자로 가격 추산 | {SITE_NAME}",
+        "일본 마운자로 용량별 한국 약국 수집 평균, 공급가, 일본 공적 약가를 비교한 추산입니다. 병원 청구액이나 카드 환율이 아닙니다.",
+        "/guides/cost/",
+        [("마운자로 원정대", "/"), ("비용 확인", "/guides/cost/")],
+        body,
+    )
+
+
+def build_about():
+    body = """<h1>정보 수집 기준과 수정</h1>
+      <p>마운자로 원정대는 일본 의료기관이 공개한 마운자로 상담 정보와 연락처를 한국어로 모은 독립 안내입니다. 의료기관이 아니고, 특정 기관과 제휴하거나 진료·예약·결제를 대신하지 않습니다. 운영자의 실명과 자격은 이 페이지에 적지 않습니다.</p>
+      <h2>무엇을 기준으로 적나</h2>
+      <p>기관 카드의 주소, 연락처, 운영시간, 상담 조건은 각 기관 공식 페이지의 문장을 확인한 범위만 적습니다. 카드마다 확인일이 있습니다. 처음 18곳은 2026년 11월 11일, HANI CLINIC·FONTANA·MIL·세타가야 Mirai·Japan Net Clinic은 2026년 11월 12일입니다.</p>
+      <p>공식 페이지에 없는 가격, 순위, 추천, 처방 성공률은 만들지 않습니다. 비용 페이지의 금액은 약가와 보도된 공급가, 가격 비교 서비스의 수집 평균을 출처와 함께 둔 추산입니다.</p>
+      <h2>틀린 내용</h2>
+      <p>바뀌었거나 틀린 곳은 <a href="mailto:moonblind@daum.net">moonblind@daum.net</a>으로 알려 주면 공식 페이지를 다시 보고 고칩니다. 제보가 곧 그 내용이 맞다는 확인은 아닙니다.</p>
+      <p>의료광고와 의약품 관련 법령에 이 페이지가 어떻게 해당하는지는 확정하지 않았습니다. 공개된 보건복지부 자료는 비의료인이 특정 기관의 위치·연락처·진료시간을 자세히 적어 내원을 유도하는 유형에 쟁점이 있을 수 있다고 설명합니다.</p>"""
+    return subpage(
+        f"정보 수집 기준 | {SITE_NAME}",
+        "마운자로 원정대가 공식 페이지 기준으로 기관 정보를 모으는 방법, 확인일, 오류 제보 메일, 의료기관이 아니라는 점을 적습니다.",
+        "/about/",
+        [("마운자로 원정대", "/"), ("수집 기준", "/about/")],
+        body,
+    )
+
+
+def write_page(path, html):
+    folder = ROOT / path.strip("/")
+    folder.mkdir(parents=True, exist_ok=True)
+    (folder / "index.html").write_text(html, encoding="utf-8")
+
+
 def main():
     if len(CLINICS) != 23:
         raise SystemExit(f"expected 21 clinics, got {len(CLINICS)}")
     (ROOT / "index.html").write_text(build_index(), encoding="utf-8")
     (ROOT / "support.html").write_text(build_support(), encoding="utf-8")
     (ROOT / "404.html").write_text(build_404(), encoding="utf-8")
+    pages = {
+        "/about/": build_about(),
+        "/guides/prescription/": build_prescription(),
+        "/guides/korea-stay/": build_korea_stay(),
+        "/guides/korean-care/": build_korean_care(),
+        "/guides/cost/": build_cost(),
+    }
+    for city_id, _name, _en in CITIES:
+        pages[f"/{city_id}/"] = build_city(city_id)
+    for path, html in pages.items():
+        write_page(path, html)
     (ROOT / "robots.txt").write_text(
         "\n".join(
             [
@@ -1109,17 +1434,18 @@ def main():
         ),
         encoding="utf-8",
     )
+    urls = ["/", "/support.html", *pages.keys()]
+    url_xml = "\n".join(
+        f"""  <url>
+    <loc>{SITE_URL}{path}</loc>
+    <lastmod>2026-11-13</lastmod>
+  </url>"""
+        for path in urls
+    )
     (ROOT / "sitemap.xml").write_text(
         f"""<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>{SITE_URL}/</loc>
-    <lastmod>2026-11-12</lastmod>
-  </url>
-  <url>
-    <loc>{SITE_URL}/support.html</loc>
-    <lastmod>2026-11-12</lastmod>
-  </url>
+{url_xml}
 </urlset>
 """,
         encoding="utf-8",
@@ -1128,7 +1454,19 @@ def main():
     count = html.count('class="clinic-card"')
     if count != 23:
         raise SystemExit(f"rendered {count} cards")
-    print("wrote", count, "clinics")
+    titles = []
+    for path, page in pages.items():
+        title = page.split("<title>", 1)[1].split("</title>", 1)[0]
+        if title in titles:
+            raise SystemExit(f"duplicate title: {title}")
+        titles.append(title)
+        expected = path.strip("/").split("/")[0]
+        if expected in CITY_NAME:
+            city_count = sum(1 for clinic in CLINICS if clinic["city"] == expected)
+            found = page.count('class="clinic-card"')
+            if found != city_count:
+                raise SystemExit(f"{path} rendered {found}, expected {city_count}")
+    print("wrote", count, "clinics and", len(pages), "extra pages")
 
 
 if __name__ == "__main__":

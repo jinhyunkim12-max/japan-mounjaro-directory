@@ -14,6 +14,10 @@
 
   if (tab && details) {
     tab.addEventListener("click", function (event) {
+      var href = tab.getAttribute("href") || "";
+      if (href.indexOf("#prices") === -1) return;
+      var url = new URL(href, location.href);
+      if (url.pathname.replace(/\/$/, "") !== location.pathname.replace(/\/$/, "")) return;
       event.preventDefault();
       openPrices();
     });
