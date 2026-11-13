@@ -9,7 +9,7 @@
   <title>마운자로 원정대 | 일본 공개 진료 정보</title>
   <link rel="canonical" href="https://japan-mounjaro-directory.netlify.app/">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="/styles.css?v=9">
+  <link rel="stylesheet" href="/styles.css?v=16">
   <link rel="sitemap" type="application/xml" href="/sitemap.xml">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="ko_KR">
@@ -41,10 +41,11 @@
       <nav aria-label="주요 메뉴">
         <ul class="nav-links">
           <li><a href="#directory">도시별 목록</a></li>
+          <li><a href="#prices">가격 추산</a></li>
           <li><a href="#korean">한국어 진료</a></li>
           <li><a href="#line-guide">문의 문장</a></li>
           <li><a href="#safety">안전 안내</a></li>
-          <li><a href="#sources">출처</a></li>
+          <li><a href="#safety">출처</a></li>
           <li><a class="meal-nav" href="/support.html"><span class="meal-emoji" aria-hidden="true">☕</span> 커피 한 잔</a></li>
         </ul>
       </nav>
@@ -54,8 +55,15 @@
     <section class="hero" aria-labelledby="page-title">
       <div class="wrap hero-grid">
         <div>
-          <p class="eyebrow">일본 공개 진료 정보를 모은 목록</p>
-          <h1 id="page-title">마운자로 원정대</h1>
+          <div class="hero-brand">
+            <div class="mascot-frame">
+              <img src="/mascot.jpg" alt="주황 초밥을 쓰고 펜을 든 마운자로 원정대 캐릭터">
+            </div>
+            <div>
+              <p class="eyebrow">일본 공개 진료 정보를 모은 목록</p>
+              <h1 id="page-title">마운자로 원정대</h1>
+            </div>
+          </div>
           <p class="hero-copy">공식 페이지에 공개된 마운자로 온라인 상담 정보와 연락처를 도시별로 모았습니다. 상담과 처방은 의료진 판단에 달려 있습니다. 이 사이트는 일본 의료기관의 공식 웹사이트, 광고, 제휴 서비스가 아닌 독립 정보 안내입니다.</p>
           <form class="finder" role="search">
             <label for="clinic-search">기관 찾기</label>
@@ -92,6 +100,37 @@
         <p><strong>의료·법률 안내.</strong> 이 페이지는 의료기관이 아니며 진료·예약·처방·의약품 판매·배송을 제공하지 않고, 개인정보나 건강정보를 수집하지 않습니다. 외부 링크는 각 기관의 공식 페이지 또는 공식 예약·문의 채널로 이동합니다. 한국 보건복지부 자료는 비의료인이 특정 의료기관의 위치·연락처·진료시간 등을 상세히 게시해 내원을 유도하는 유형에 의료광고상 쟁점이 있을 수 있다고 설명합니다. 이 페이지의 법적 분류는 확정되지 않았으므로 공개·운영 전 국내 법률 검토가 필요합니다. 최신 정보는 각 기관의 공식 페이지에서 확인하세요.</p>
       </div>
     </div>
+    <section id="prices">
+      <div class="wrap">
+        <details class="fold">
+          <summary>용량별 한·일 가격 추산</summary>
+          <p class="price-lead">4주분(주 1회 × 4) 참고 금액입니다. 병원·약국·카드사가 청구하는 정확한 가격이 아니고, 어디가 싼지 고르라는 비교도 아닙니다.</p>
+          <div class="price-wrap">
+            <table class="price-table">
+              <caption class="sr-only">용량별 한국 약국 약값 평균, 한국 공급가, 일본 공적 약가, 원화 추산</caption>
+              <thead>
+                <tr>
+                  <th scope="col">용량</th>
+                  <th scope="col">한국 약국 약값 평균</th>
+                  <th scope="col">한국 공급가</th>
+                  <th scope="col">일본 공적 약가 4회</th>
+                  <th scope="col">일본 약가 원화 추산</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><th scope="row">2.5mg</th><td>303,110원</td><td>278,066원</td><td title="키트당 1,443엔 × 4회">5,772엔</td><td data-jpy="5772">48,219원</td></tr><tr><th scope="row">5mg</th><td>391,230원</td><td>369,307원</td><td title="키트당 2,886엔 × 4회">11,544엔</td><td data-jpy="11544">96,439원</td></tr><tr><th scope="row">7.5mg</th><td>545,210원</td><td>521,377원</td><td title="키트당 4,329엔 × 4회">17,316엔</td><td data-jpy="17316">144,658원</td></tr><tr><th scope="row">10mg</th><td>544,600원</td><td>521,377원</td><td title="키트당 5,772엔 × 4회">23,088엔</td><td data-jpy="23088">192,877원</td></tr><tr><th scope="row">12.5mg</th><td>703,170원</td><td>675,131원</td><td title="키트당 7,215엔 × 4회">28,860엔</td><td data-jpy="28860">241,096원</td></tr><tr><th scope="row">15mg</th><td>712,610원</td><td>675,131원</td><td title="키트당 8,658엔 × 4회">34,632엔</td><td data-jpy="34632">289,316원</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <ul class="price-notes">
+            <li>한국 평균은 가격 비교 서비스 <a href="https://my-doctor.io/medical-cost/%EB%A7%88%EC%9A%B4%EC%9E%90%EB%A1%9C" target="_blank" rel="noopener noreferrer">나만의닥터</a>가 2026년 11월 12일에 적은 약국 약값입니다. 공식 통계가 아니고, 진료비·검사비는 들어 있지 않습니다. 수집 규모는 2.5mg 2,583곳에서 15mg 1,214곳까지입니다.</li>
+            <li>한국 공급가는 환자가 내는 판매가가 아닙니다. 2.5–10mg는 <a href="https://www.khan.co.kr/article/202606090600051" target="_blank" rel="noopener noreferrer">경향신문 2026년 6월 9일</a> 보도의 의료기관 구입 단가이고, 12.5mg·15mg는 <a href="https://www.medicaltimes.com/Main/News/NewsView.html?ID=1169119" target="_blank" rel="noopener noreferrer">메디칼타임즈 2026년 6월 8일</a> 보도의 부가세 포함 표준 단가입니다.</li>
+            <li>일본 칸은 자유진료 청구 평균이 아닙니다. <a href="https://www.mhlw.go.jp/content/10808000/001699504.pdf" target="_blank" rel="noopener noreferrer">후생노동성</a>이 2026년 8월 1일부터 적용한 보험 약가를 4회로 둔 약값입니다. 체중 감량 목적의 자유진료비는 기관마다 따로 정합니다.</li>
+            <li>원화 추산은 일본 약가에 이 페이지의 참고 환율을 곱한 값입니다. 환전 수수료와 진료비는 빠졌고, 페이지를 열 때 그날 고시 환율로 다시 계산합니다.</li>
+          </ul>
+        </details>
+      </div>
+    </section>
     <section id="directory">
       <div class="wrap">
         <div class="section-head">
@@ -99,7 +138,7 @@
             <p class="section-kicker">공식 페이지 공개 정보</p>
             <h2>도시별 의료기관 안내</h2>
           </div>
-          <p class="section-intro">공식 페이지에 마운자로 상담 안내와 공개 연락 경로가 있는 곳을 담았습니다. 나열 순서는 자료를 정리한 순서이며 순위가 아닙니다. 주소와 운영시간은 카드를 펼치면 나옵니다. 지도 링크도 그 안에 있습니다.</p>
+          <p class="section-intro">도시를 누르면 그 도시의 기관만 펼쳐집니다. 기관 이름의 상세를 누르면 주소와 연락처가 나옵니다. 나열 순서는 자료를 정리한 순서이며 순위가 아닙니다.</p>
         </div>
         <p id="filter-empty" hidden>해당하는 기관이 없습니다.</p>
         <nav aria-label="도시 바로가기"><ul class="city-nav"><li><a href="#chiba" data-city-filter="chiba">지바 1</a></li>
@@ -110,28 +149,28 @@
 <li><a href="#nagoya" data-city-filter="nagoya">나고야 3</a></li>
 <li><a href="#kyoto" data-city-filter="kyoto">교토 3</a></li></ul></nav>
         
-      <section class="city-section" id="chiba" aria-labelledby="chiba-title">
-        <div class="city-heading">
+      <details class="city-folder city-section" id="chiba">
+        <summary>
           <h3 id="chiba-title">지바</h3>
           <span>Chiba · 1곳</span>
-        </div>
+        </summary>
         <div class="clinic-grid">
         <article class="clinic-card" id="chiba-hani-clinic" data-city="chiba" data-search="HANI CLINIC HANI CLINIC（運営: 株式会社メドマルジェ） 이치카와시 지바 공식 한국어 소개는 한국에 있을 때와 일본에 체류할 때 모두 일본 현지 의사의 온라인 진료를 받을 수 있다고 적습니다. 처방 여부는 의사가 판단합니다.">
           <div class="clinic-top">
             <h4 class="clinic-name">HANI CLINIC<small>HANI CLINIC（運営: 株式会社メドマルジェ）</small></h4>
             <span class="area-pill">이치카와시</span>
           </div>
+          
           <ul class="compare">
             <li><span>온라인 상담 안내</span><strong class="badge is-yes">확인</strong></li>
             <li><span>한국 체류 중 상담</span><strong class="badge is-yes">안내 있음</strong></li>
             <li><span>한국어 진료</span><strong class="badge is-unknown">미확인</strong></li>
             <li><span>영어 상담</span><strong class="badge is-unknown">미확인</strong></li>
           </ul>
-          
-          <p class="clinic-summary">공식 한국어 소개는 한국에 있을 때와 일본에 체류할 때 모두 일본 현지 의사의 온라인 진료를 받을 수 있다고 적습니다. 처방 여부는 의사가 판단합니다.</p>
-          <p class="checked">확인일 2026-11-12 · 최신 내용은 공식 페이지에서 다시 확인하세요.</p>
           <details class="card-more">
             <summary>상세 정보 펼쳐보기</summary>
+            <p class="clinic-summary">공식 한국어 소개는 한국에 있을 때와 일본에 체류할 때 모두 일본 현지 의사의 온라인 진료를 받을 수 있다고 적습니다. 처방 여부는 의사가 판단합니다.</p>
+            <p class="checked">확인일 2026-11-12 · 최신 내용은 공식 페이지에서 다시 확인하세요.</p>
             <dl class="detail-list">
               <div class="detail"><dt>주소</dt><dd>〒272-0826 千葉県市川市真間3-5-19（소개 페이지에 적힌 운영 법인 소재지）</dd></div>
               <div class="detail"><dt>전화</dt><dd>공식 페이지에서 전화번호를 확인하지 못했습니다. 특정상거래법 표기는 요청 시 공개한다고 적습니다.</dd></div>
@@ -148,30 +187,30 @@
           </details>
         </article>
         </div>
-      </section>
+      </details>
 
-      <section class="city-section" id="tokyo" aria-labelledby="tokyo-title">
-        <div class="city-heading">
+      <details class="city-folder city-section" id="tokyo">
+        <summary>
           <h3 id="tokyo-title">도쿄</h3>
           <span>Tokyo · 6곳</span>
-        </div>
+        </summary>
         <div class="clinic-grid">
         <article class="clinic-card" id="tokyo-nihonbashi-clinic" data-city="tokyo" data-search="Nihonbashi Clinic 日本橋クリニック人形町院 주오구 도쿄 공식 페이지는 마운자로 전화·온라인 상담과 영어·일본어 대응을 안내합니다. 첫 방문 시 신분증과 온라인 문진이 필요할 수 있으며, 처방 여부는 의사가 판단합니다. 영문 안내는 일본 거주자·방문자를 설명하고, 한국 체류 중 상담 가능 여부는 공식 안내에서 확인되지 않았습니다.">
           <div class="clinic-top">
             <h4 class="clinic-name">Nihonbashi Clinic<small>日本橋クリニック人形町院</small></h4>
             <span class="area-pill">주오구</span>
           </div>
+          
           <ul class="compare">
             <li><span>온라인 상담 안내</span><strong class="badge is-yes">확인</strong></li>
             <li><span>한국 체류 중 상담</span><strong class="badge is-unknown">미확인</strong></li>
             <li><span>한국어 진료</span><strong class="badge is-unknown">미확인</strong></li>
             <li><span>영어 상담</span><strong class="badge is-yes">확인</strong></li>
           </ul>
-          
-          <p class="clinic-summary">공식 페이지는 마운자로 전화·온라인 상담과 영어·일본어 대응을 안내합니다. 첫 방문 시 신분증과 온라인 문진이 필요할 수 있으며, 처방 여부는 의사가 판단합니다. 영문 안내는 일본 거주자·방문자를 설명하고, 한국 체류 중 상담 가능 여부는 공식 안내에서 확인되지 않았습니다.</p>
-          <p class="checked">확인일 2026-11-11 · 최신 내용은 공식 페이지에서 다시 확인하세요.</p>
           <details class="card-more">
             <summary>상세 정보 펼쳐보기</summary>
+            <p class="clinic-summary">공식 페이지는 마운자로 전화·온라인 상담과 영어·일본어 대응을 안내합니다. 첫 방문 시 신분증과 온라인 문진이 필요할 수 있으며, 처방 여부는 의사가 판단합니다. 영문 안내는 일본 거주자·방문자를 설명하고, 한국 체류 중 상담 가능 여부는 공식 안내에서 확인되지 않았습니다.</p>
+            <p class="checked">확인일 2026-11-11 · 최신 내용은 공식 페이지에서 다시 확인하세요.</p>
             <dl class="detail-list">
               <div class="detail"><dt>주소</dt><dd>〒103-0013 東京都中央区日本橋人形町2-30-5 エイム人形町2階</dd></div>
               <div class="detail"><dt>전화</dt><dd><a href="tel:+81362625544">+81-3-6262-5544</a></dd></div>
@@ -267,17 +306,17 @@
             <h4 class="clinic-name">Shinbashi Ginza Swift Clinic<small>新橋銀座スウィフトクリニック</small></h4>
             <span class="area-pill">미나토구</span>
           </div>
+          
           <ul class="compare">
             <li><span>온라인 상담 안내</span><strong class="badge is-yes">확인</strong></li>
             <li><span>한국 체류 중 상담</span><strong class="badge is-unknown">미확인</strong></li>
             <li><span>한국어 진료</span><strong class="badge is-unknown">미확인</strong></li>
             <li><span>영어 상담</span><strong class="badge is-mid">영문 페이지</strong></li>
           </ul>
-          
-          <p class="clinic-summary">공식 영문 페이지에서 온라인 마운자로 상담과 영문 예약 양식을 안내합니다. 예약 뒤 사전 문진을 작성하며, 병원 안내상 예약 시스템·문진은 일본어일 수 있어 LINE으로 도움을 문의할 수 있습니다.</p>
-          <p class="checked">확인일 2026-11-11 · 최신 내용은 공식 페이지에서 다시 확인하세요.</p>
           <details class="card-more">
             <summary>상세 정보 펼쳐보기</summary>
+            <p class="clinic-summary">공식 영문 페이지에서 온라인 마운자로 상담과 영문 예약 양식을 안내합니다. 예약 뒤 사전 문진을 작성하며, 병원 안내상 예약 시스템·문진은 일본어일 수 있어 LINE으로 도움을 문의할 수 있습니다.</p>
+            <p class="checked">확인일 2026-11-11 · 최신 내용은 공식 페이지에서 다시 확인하세요.</p>
             <dl class="detail-list">
               <div class="detail"><dt>주소</dt><dd>〒105-0004 東京都港区新橋1-8-4 丸忠ビル7F-B</dd></div>
               <div class="detail"><dt>전화</dt><dd><a href="tel:+81359628738">+81-3-5962-8738</a></dd></div>
@@ -373,17 +412,17 @@
             <h4 class="clinic-name">Drip Medical<small>Drip Medical Beauty</small></h4>
             <span class="area-pill">미나토구</span>
           </div>
+          
           <ul class="compare">
             <li><span>온라인 상담 안내</span><strong class="badge is-yes">확인</strong></li>
             <li><span>한국 체류 중 상담</span><strong class="badge is-unknown">미확인</strong></li>
             <li><span>한국어 진료</span><strong class="badge is-unknown">미확인</strong></li>
             <li><span>영어 상담</span><strong class="badge is-unknown">미확인</strong></li>
           </ul>
-          
-          <p class="clinic-summary">공식 마운자로 페이지는 의사의 적합성 평가를 거치는 온라인 상담을 안내하며, 예약 화면은 일본어로 열린다고 명시합니다. 예약 뒤 처방 가능 여부는 의료진이 판단합니다.</p>
-          <p class="checked">확인일 2026-11-11 · 최신 내용은 공식 페이지에서 다시 확인하세요.</p>
           <details class="card-more">
             <summary>상세 정보 펼쳐보기</summary>
+            <p class="clinic-summary">공식 마운자로 페이지는 의사의 적합성 평가를 거치는 온라인 상담을 안내하며, 예약 화면은 일본어로 열린다고 명시합니다. 예약 뒤 처방 가능 여부는 의료진이 판단합니다.</p>
+            <p class="checked">확인일 2026-11-11 · 최신 내용은 공식 페이지에서 다시 확인하세요.</p>
             <dl class="detail-list">
               <div class="detail"><dt>주소</dt><dd>〒105-0013 東京都港区浜松町1-27-14 サン・キツカワビル3F</dd></div>
               <div class="detail"><dt>전화</dt><dd><a href="tel:+81364529113">+81-3-6452-9113</a></dd></div>
@@ -479,17 +518,17 @@
             <h4 class="clinic-name">Tokyo Online Clinic<small>東京オンラインクリニック（池袋サンシャイン通り皮膚科）</small></h4>
             <span class="area-pill">도시마구</span>
           </div>
+          
           <ul class="compare">
             <li><span>온라인 상담 안내</span><strong class="badge is-yes">확인</strong></li>
             <li><span>한국 체류 중 상담</span><strong class="badge is-unknown">미확인</strong></li>
             <li><span>한국어 진료</span><strong class="badge is-unknown">미확인</strong></li>
             <li><span>영어 상담</span><strong class="badge is-unknown">미확인</strong></li>
           </ul>
-          
-          <p class="clinic-summary">공식 마운자로 페이지는 온라인 진료 정보를 게시하며, 처방은 의료진 판단에 따라 달라질 수 있다고 설명합니다.</p>
-          <p class="checked">확인일 2026-11-11 · 최신 내용은 공식 페이지에서 다시 확인하세요.</p>
           <details class="card-more">
             <summary>상세 정보 펼쳐보기</summary>
+            <p class="clinic-summary">공식 마운자로 페이지는 온라인 진료 정보를 게시하며, 처방은 의료진 판단에 따라 달라질 수 있다고 설명합니다.</p>
+            <p class="checked">확인일 2026-11-11 · 최신 내용은 공식 페이지에서 다시 확인하세요.</p>
             <dl class="detail-list">
               <div class="detail"><dt>주소</dt><dd>〒170-0013 東京都豊島区東池袋1丁目12-11 Ogsビル11階</dd></div>
               <div class="detail"><dt>전화</dt><dd><a href="tel:+81367717809">+81-3-6771-7809</a></dd></div>
@@ -585,17 +624,17 @@
             <h4 class="clinic-name">Mirai Medical Clinic Setagaya<small>ミライメディカルクリニック（世田谷・一般社団法人新玄会）</small></h4>
             <span class="area-pill">세타가야구</span>
           </div>
+          
           <ul class="compare">
             <li><span>온라인 상담 안내</span><strong class="badge is-unknown">미확인</strong></li>
             <li><span>한국 체류 중 상담</span><strong class="badge is-yes">안내 있음</strong></li>
             <li><span>한국어 진료</span><strong class="badge is-yes">대응 안내</strong></li>
             <li><span>영어 상담</span><strong class="badge is-unknown">미확인</strong></li>
           </ul>
-          
-          <p class="clinic-summary">공식 한국어 페이지는 예약·진료·사후 상담을 한국어로 진행하고, 일본 여행 일정이 정해지면 한국에 있을 때 미리 진료할 수 있다고 적습니다. 처방약 수령 장소는 일본 내 호텔·체류지라고 안내합니다. 후쿠오카의 Mirai Medical Clinic과는 다른 기관입니다. 처방 여부는 의사가 판단합니다.</p>
-          <p class="checked">확인일 2026-11-12 · 최신 내용은 공식 페이지에서 다시 확인하세요.</p>
           <details class="card-more">
             <summary>상세 정보 펼쳐보기</summary>
+            <p class="clinic-summary">공식 한국어 페이지는 예약·진료·사후 상담을 한국어로 진행하고, 일본 여행 일정이 정해지면 한국에 있을 때 미리 진료할 수 있다고 적습니다. 처방약 수령 장소는 일본 내 호텔·체류지라고 안내합니다. 후쿠오카의 Mirai Medical Clinic과는 다른 기관입니다. 처방 여부는 의사가 판단합니다.</p>
+            <p class="checked">확인일 2026-11-12 · 최신 내용은 공식 페이지에서 다시 확인하세요.</p>
             <dl class="detail-list">
               <div class="detail"><dt>주소</dt><dd>〒154-0004 東京都世田谷区太子堂2丁目12-2 T-one世田谷ビル</dd></div>
               <div class="detail"><dt>전화</dt><dd>공식 페이지에서 전화번호를 확인하지 못했습니다.</dd></div>
@@ -616,17 +655,17 @@
             <h4 class="clinic-name">Japan Net Clinic<small>ビューティーオンクリニック銀座</small></h4>
             <span class="area-pill">주오구</span>
           </div>
+          
           <ul class="compare">
             <li><span>온라인 상담 안내</span><strong class="badge is-yes">확인</strong></li>
             <li><span>한국 체류 중 상담</span><strong class="badge is-unknown">미확인</strong></li>
             <li><span>한국어 진료</span><strong class="badge is-yes">한국인 의사</strong></li>
             <li><span>영어 상담</span><strong class="badge is-yes">확인</strong></li>
           </ul>
-          
-          <p class="clinic-summary">공식 페이지는 한국어·영어·일본어로 진료하는 한국인 의사가 직접 진료한다고 적습니다. 초진과 재진 모두 온라인 진료를 신청할 수 있고, 의사가 대면 진료가 필요하다고 판단할 수 있다고 안내합니다. 기본 대상은 일본 내 주소가 있는 사람이며, 한국 거주 여행객 문의에는 일본 체류 중 진료라고 답합니다. 해외 배송은 제공하지 않는다고 적혀 있습니다.</p>
-          <p class="checked">확인일 2026-11-12 · 최신 내용은 공식 페이지에서 다시 확인하세요.</p>
           <details class="card-more">
             <summary>상세 정보 펼쳐보기</summary>
+            <p class="clinic-summary">공식 페이지는 한국어·영어·일본어로 진료하는 한국인 의사가 직접 진료한다고 적습니다. 초진과 재진 모두 온라인 진료를 신청할 수 있고, 의사가 대면 진료가 필요하다고 판단할 수 있다고 안내합니다. 기본 대상은 일본 내 주소가 있는 사람이며, 한국 거주 여행객 문의에는 일본 체류 중 진료라고 답합니다. 해외 배송은 제공하지 않는다고 적혀 있습니다.</p>
+            <p class="checked">확인일 2026-11-12 · 최신 내용은 공식 페이지에서 다시 확인하세요.</p>
             <dl class="detail-list">
               <div class="detail"><dt>주소</dt><dd>〒104-0061 東京都中央区銀座8-9-7 HULIC &amp; New GINZA 8 11F</dd></div>
               <div class="detail"><dt>전화</dt><dd><a href="tel:+81362814250">+81-3-6281-4250</a></dd></div>
@@ -643,30 +682,30 @@
           </details>
         </article>
         </div>
-      </section>
+      </details>
 
-      <section class="city-section" id="osaka" aria-labelledby="osaka-title">
-        <div class="city-heading">
+      <details class="city-folder city-section" id="osaka">
+        <summary>
           <h3 id="osaka-title">오사카</h3>
           <span>Osaka · 4곳</span>
-        </div>
+        </summary>
         <div class="clinic-grid">
         <article class="clinic-card" id="osaka-daibikai-clinic-shinsaibashi" data-city="osaka" data-search="Daibikai Clinic Shinsaibashi 大美会クリニック 心斎橋本院 주오구 오사카 공식 마운자로 안내와 일본어 예약 화면에 온라인 진료 및 마운자로 상담 항목이 표시됩니다. 처방은 의사의 판단에 따릅니다.">
           <div class="clinic-top">
             <h4 class="clinic-name">Daibikai Clinic Shinsaibashi<small>大美会クリニック 心斎橋本院</small></h4>
             <span class="area-pill">주오구</span>
           </div>
+          
           <ul class="compare">
             <li><span>온라인 상담 안내</span><strong class="badge is-yes">확인</strong></li>
             <li><span>한국 체류 중 상담</span><strong class="badge is-unknown">미확인</strong></li>
             <li><span>한국어 진료</span><strong class="badge is-unknown">미확인</strong></li>
             <li><span>영어 상담</span><strong class="badge is-unknown">미확인</strong></li>
           </ul>
-          
-          <p class="clinic-summary">공식 마운자로 안내와 일본어 예약 화면에 온라인 진료 및 마운자로 상담 항목이 표시됩니다. 처방은 의사의 판단에 따릅니다.</p>
-          <p class="checked">확인일 2026-11-11 · 최신 내용은 공식 페이지에서 다시 확인하세요.</p>
           <details class="card-more">
             <summary>상세 정보 펼쳐보기</summary>
+            <p class="clinic-summary">공식 마운자로 안내와 일본어 예약 화면에 온라인 진료 및 마운자로 상담 항목이 표시됩니다. 처방은 의사의 판단에 따릅니다.</p>
+            <p class="checked">확인일 2026-11-11 · 최신 내용은 공식 페이지에서 다시 확인하세요.</p>
             <dl class="detail-list">
               <div class="detail"><dt>주소</dt><dd>〒542-0083 大阪府大阪市中央区東心斎橋2-8-28 周防町GEOビル3F</dd></div>
               <div class="detail"><dt>전화</dt><dd><a href="tel:0120373889">0120-373-889</a><span class="mini-note">일본 국내 무료전화 번호로, 해외에서는 연결되지 않을 수 있습니다.</span></dd></div>
@@ -687,17 +726,17 @@
             <h4 class="clinic-name">Ai Clinic Shinsaibashi<small>Aiクリニック心斎橋</small></h4>
             <span class="area-pill">주오구</span>
           </div>
+          
           <ul class="compare">
             <li><span>온라인 상담 안내</span><strong class="badge is-yes">확인</strong></li>
             <li><span>한국 체류 중 상담</span><strong class="badge is-unknown">미확인</strong></li>
             <li><span>한국어 진료</span><strong class="badge is-unknown">미확인</strong></li>
             <li><span>영어 상담</span><strong class="badge is-unknown">미확인</strong></li>
           </ul>
-          
-          <p class="clinic-summary">공식 마운자로 안내는 온라인·내원 진료를 모두 안내하고 LINE으로 희망 내용을 문의하는 절차를 설명합니다. 처방 여부는 상담 결과에 따라 달라질 수 있습니다.</p>
-          <p class="checked">확인일 2026-11-11 · 최신 내용은 공식 페이지에서 다시 확인하세요.</p>
           <details class="card-more">
             <summary>상세 정보 펼쳐보기</summary>
+            <p class="clinic-summary">공식 마운자로 안내는 온라인·내원 진료를 모두 안내하고 LINE으로 희망 내용을 문의하는 절차를 설명합니다. 처방 여부는 상담 결과에 따라 달라질 수 있습니다.</p>
+            <p class="checked">확인일 2026-11-11 · 최신 내용은 공식 페이지에서 다시 확인하세요.</p>
             <dl class="detail-list">
               <div class="detail"><dt>주소</dt><dd>〒542-0081 大阪府大阪市中央区南船場3丁目11-18 Osaka Metro 心斎橋ビル7F</dd></div>
               <div class="detail"><dt>전화</dt><dd><a href="tel:+81661217600">+81-6-6121-7600</a></dd></div>
@@ -793,17 +832,17 @@
             <h4 class="clinic-name">ONE CLINIC Umeda<small>ONE CLINIC 梅田</small></h4>
             <span class="area-pill">기타구</span>
           </div>
+          
           <ul class="compare">
             <li><span>온라인 상담 안내</span><strong class="badge is-yes">확인</strong></li>
             <li><span>한국 체류 중 상담</span><strong class="badge is-unknown">미확인</strong></li>
             <li><span>한국어 진료</span><strong class="badge is-unknown">미확인</strong></li>
             <li><span>영어 상담</span><strong class="badge is-unknown">미확인</strong></li>
           </ul>
-          
-          <p class="clinic-summary">공식 메디컬 다이어트 페이지에 마운자로와 온라인 진료 안내가 있습니다. 예약 시스템에는 온라인 다이어트 외래 항목이 표시되며, 처방은 진료 후 판단됩니다.</p>
-          <p class="checked">확인일 2026-11-11 · 최신 내용은 공식 페이지에서 다시 확인하세요.</p>
           <details class="card-more">
             <summary>상세 정보 펼쳐보기</summary>
+            <p class="clinic-summary">공식 메디컬 다이어트 페이지에 마운자로와 온라인 진료 안내가 있습니다. 예약 시스템에는 온라인 다이어트 외래 항목이 표시되며, 처방은 진료 후 판단됩니다.</p>
+            <p class="checked">확인일 2026-11-11 · 최신 내용은 공식 페이지에서 다시 확인하세요.</p>
             <dl class="detail-list">
               <div class="detail"><dt>주소</dt><dd>〒530-0027 大阪府大阪市北区堂山町18-2 若杉東梅田ビル3階・5階（美容受付は3階）</dd></div>
               <div class="detail"><dt>전화</dt><dd><a href="tel:+81663115770">+81-6-6311-5770</a></dd></div>
@@ -899,17 +938,17 @@
             <h4 class="clinic-name">MIL CLINIC OSAKA<small>MIL CLINIC OSAKA（医療法人継桜会）</small></h4>
             <span class="area-pill">주오구</span>
           </div>
+          
           <ul class="compare">
             <li><span>온라인 상담 안내</span><strong class="badge is-yes">확인</strong></li>
             <li><span>한국 체류 중 상담</span><strong class="badge is-mid">출발 전 안내</strong></li>
             <li><span>한국어 진료</span><strong class="badge is-unknown">미확인</strong></li>
             <li><span>영어 상담</span><strong class="badge is-yes">확인</strong></li>
           </ul>
-          
-          <p class="clinic-summary">공식 한국어 페이지는 일본에 거주하지 않는 외국인도 출발 전 온라인 상담이 가능하다고 적습니다. 온라인 진료 언어는 일본어·영어로 안내되어 있습니다. 처방 여부는 의사가 판단합니다.</p>
-          <p class="checked">확인일 2026-11-12 · 최신 내용은 공식 페이지에서 다시 확인하세요.</p>
           <details class="card-more">
             <summary>상세 정보 펼쳐보기</summary>
+            <p class="clinic-summary">공식 한국어 페이지는 일본에 거주하지 않는 외국인도 출발 전 온라인 상담이 가능하다고 적습니다. 온라인 진료 언어는 일본어·영어로 안내되어 있습니다. 처방 여부는 의사가 판단합니다.</p>
+            <p class="checked">확인일 2026-11-12 · 최신 내용은 공식 페이지에서 다시 확인하세요.</p>
             <dl class="detail-list">
               <div class="detail"><dt>주소</dt><dd>〒542-0086 大阪府大阪市中央区西心斎橋1-5-27 7F</dd></div>
               <div class="detail"><dt>전화</dt><dd><a href="tel:+81667868880">+81-6-6786-8880</a></dd></div>
@@ -926,30 +965,30 @@
           </details>
         </article>
         </div>
-      </section>
+      </details>
 
-      <section class="city-section" id="fukuoka" aria-labelledby="fukuoka-title">
-        <div class="city-heading">
+      <details class="city-folder city-section" id="fukuoka">
+        <summary>
           <h3 id="fukuoka-title">후쿠오카</h3>
           <span>Fukuoka · 4곳</span>
-        </div>
+        </summary>
         <div class="clinic-grid">
         <article class="clinic-card" id="fukuoka-m-medical-clinic-fukuoka" data-city="fukuoka" data-search="M Medical Clinic Fukuoka Mメディカルクリニック福岡 하카타구 후쿠오카 공식 마운자로 안내는 온라인 진료 후 의사가 처방 여부를 판단한다고 설명합니다. 예약·상담 관련 공식 페이지는 일본어로 제공됩니다.">
           <div class="clinic-top">
             <h4 class="clinic-name">M Medical Clinic Fukuoka<small>Mメディカルクリニック福岡</small></h4>
             <span class="area-pill">하카타구</span>
           </div>
+          
           <ul class="compare">
             <li><span>온라인 상담 안내</span><strong class="badge is-yes">확인</strong></li>
             <li><span>한국 체류 중 상담</span><strong class="badge is-unknown">미확인</strong></li>
             <li><span>한국어 진료</span><strong class="badge is-unknown">미확인</strong></li>
             <li><span>영어 상담</span><strong class="badge is-unknown">미확인</strong></li>
           </ul>
-          
-          <p class="clinic-summary">공식 마운자로 안내는 온라인 진료 후 의사가 처방 여부를 판단한다고 설명합니다. 예약·상담 관련 공식 페이지는 일본어로 제공됩니다.</p>
-          <p class="checked">확인일 2026-11-11 · 최신 내용은 공식 페이지에서 다시 확인하세요.</p>
           <details class="card-more">
             <summary>상세 정보 펼쳐보기</summary>
+            <p class="clinic-summary">공식 마운자로 안내는 온라인 진료 후 의사가 처방 여부를 판단한다고 설명합니다. 예약·상담 관련 공식 페이지는 일본어로 제공됩니다.</p>
+            <p class="checked">확인일 2026-11-11 · 최신 내용은 공식 페이지에서 다시 확인하세요.</p>
             <dl class="detail-list">
               <div class="detail"><dt>주소</dt><dd>〒812-0013 福岡県福岡市博多区博多駅東2丁目5-33 ゲートスクエア博多駅前2階</dd></div>
               <div class="detail"><dt>전화</dt><dd><a href="tel:+81924415003">+81-92-441-5003</a></dd></div>
@@ -1045,17 +1084,17 @@
             <h4 class="clinic-name">Mirai Medical Clinic<small>ミライメディカルクリニック</small></h4>
             <span class="area-pill">하카타구</span>
           </div>
+          
           <ul class="compare">
             <li><span>온라인 상담 안내</span><strong class="badge is-yes">확인</strong></li>
             <li><span>한국 체류 중 상담</span><strong class="badge is-unknown">미확인</strong></li>
             <li><span>한국어 진료</span><strong class="badge is-unknown">미확인</strong></li>
             <li><span>영어 상담</span><strong class="badge is-unknown">미확인</strong></li>
           </ul>
-          
-          <p class="clinic-summary">공식 온라인 다이어트 안내에 마운자로 진료와 온라인 예약 경로가 있습니다. 의사 진료를 거치며 상담 결과에 따라 처방되지 않을 수 있습니다. 한국 거주자의 원격상담 가능 여부는 이 기관의 공식 안내에서 확인되지 않았습니다. 도쿄 세타가야의 Mirai Medical Clinic Setagaya와는 다른 기관입니다.</p>
-          <p class="checked">확인일 2026-11-11 · 최신 내용은 공식 페이지에서 다시 확인하세요.</p>
           <details class="card-more">
             <summary>상세 정보 펼쳐보기</summary>
+            <p class="clinic-summary">공식 온라인 다이어트 안내에 마운자로 진료와 온라인 예약 경로가 있습니다. 의사 진료를 거치며 상담 결과에 따라 처방되지 않을 수 있습니다. 한국 거주자의 원격상담 가능 여부는 이 기관의 공식 안내에서 확인되지 않았습니다. 도쿄 세타가야의 Mirai Medical Clinic Setagaya와는 다른 기관입니다.</p>
+            <p class="checked">확인일 2026-11-11 · 최신 내용은 공식 페이지에서 다시 확인하세요.</p>
             <dl class="detail-list">
               <div class="detail"><dt>주소</dt><dd>〒812-0027 福岡県福岡市博多区下川端町3-1 博多リバレイン1F</dd></div>
               <div class="detail"><dt>전화</dt><dd><a href="tel:+81927071111">+81-92-707-1111</a></dd></div>
@@ -1151,17 +1190,17 @@
             <h4 class="clinic-name">Clara Beauty Clinic Fukuoka Tenjin<small>クララ美容皮膚科 福岡天神院</small></h4>
             <span class="area-pill">주오구</span>
           </div>
+          
           <ul class="compare">
             <li><span>온라인 상담 안내</span><strong class="badge is-yes">확인</strong></li>
             <li><span>한국 체류 중 상담</span><strong class="badge is-unknown">미확인</strong></li>
             <li><span>한국어 진료</span><strong class="badge is-unknown">미확인</strong></li>
             <li><span>영어 상담</span><strong class="badge is-unknown">미확인</strong></li>
           </ul>
-          
-          <p class="clinic-summary">공식 페이지는 마운자로 온라인 진료 후 처방을 안내합니다. 전화번호는 확인한 공식 페이지에 게시되지 않아 공식 LINE 경로를 함께 표시했습니다.</p>
-          <p class="checked">확인일 2026-11-11 · 최신 내용은 공식 페이지에서 다시 확인하세요.</p>
           <details class="card-more">
             <summary>상세 정보 펼쳐보기</summary>
+            <p class="clinic-summary">공식 페이지는 마운자로 온라인 진료 후 처방을 안내합니다. 전화번호는 확인한 공식 페이지에 게시되지 않아 공식 LINE 경로를 함께 표시했습니다.</p>
+            <p class="checked">확인일 2026-11-11 · 최신 내용은 공식 페이지에서 다시 확인하세요.</p>
             <dl class="detail-list">
               <div class="detail"><dt>주소</dt><dd>〒810-0001 福岡県福岡市中央区天神3丁目4-10 天神西茂ビル3階</dd></div>
               <div class="detail"><dt>전화</dt><dd>공식 페이지에서 전화번호를 확인하지 못했습니다.</dd></div>
@@ -1257,17 +1296,17 @@
             <h4 class="clinic-name">FONTANA CLINIC Tenjin<small>폰타나클리닉 텐진</small></h4>
             <span class="area-pill">주오구</span>
           </div>
+          
           <ul class="compare">
             <li><span>온라인 상담 안내</span><strong class="badge is-yes">확인</strong></li>
             <li><span>한국 체류 중 상담</span><strong class="badge is-yes">안내 있음</strong></li>
             <li><span>한국어 진료</span><strong class="badge is-yes">대응 안내</strong></li>
             <li><span>영어 상담</span><strong class="badge is-unknown">미확인</strong></li>
           </ul>
-          
-          <p class="clinic-summary">공식 한국어 페이지는 한국어 대응 스태프가 매일 있고, 한국에 있는 동안 온라인 진료를 예약할 수 있다고 적습니다. 직원의 국적은 확인되지 않았습니다. 처방 여부는 의사가 판단합니다.</p>
-          <p class="checked">확인일 2026-11-12 · 최신 내용은 공식 페이지에서 다시 확인하세요.</p>
           <details class="card-more">
             <summary>상세 정보 펼쳐보기</summary>
+            <p class="clinic-summary">공식 한국어 페이지는 한국어 대응 스태프가 매일 있고, 한국에 있는 동안 온라인 진료를 예약할 수 있다고 적습니다. 직원의 국적은 확인되지 않았습니다. 처방 여부는 의사가 판단합니다.</p>
+            <p class="checked">확인일 2026-11-12 · 최신 내용은 공식 페이지에서 다시 확인하세요.</p>
             <dl class="detail-list">
               <div class="detail"><dt>주소</dt><dd>〒810-0021 福岡県福岡市中央区今泉1-18-23 CASA FONTANA 2F</dd></div>
               <div class="detail"><dt>전화</dt><dd>공식 한국어 페이지에서 전화번호를 확인하지 못했습니다.</dd></div>
@@ -1284,30 +1323,30 @@
           </details>
         </article>
         </div>
-      </section>
+      </details>
 
-      <section class="city-section" id="sapporo" aria-labelledby="sapporo-title">
-        <div class="city-heading">
+      <details class="city-folder city-section" id="sapporo">
+        <summary>
           <h3 id="sapporo-title">삿포로</h3>
           <span>Sapporo · 2곳</span>
-        </div>
+        </summary>
         <div class="clinic-grid">
         <article class="clinic-card" id="sapporo-clara-beauty-clinic-sapporo" data-city="sapporo" data-search="Clara Beauty Clinic Sapporo クララビューティクリニック札幌院 기타구 삿포로 공식 마운자로 안내는 온라인 영상 상담 절차를 소개합니다. 처방은 의사 판단에 달려 있으며 보장되지 않습니다.">
           <div class="clinic-top">
             <h4 class="clinic-name">Clara Beauty Clinic Sapporo<small>クララビューティクリニック札幌院</small></h4>
             <span class="area-pill">기타구</span>
           </div>
+          
           <ul class="compare">
             <li><span>온라인 상담 안내</span><strong class="badge is-yes">확인</strong></li>
             <li><span>한국 체류 중 상담</span><strong class="badge is-unknown">미확인</strong></li>
             <li><span>한국어 진료</span><strong class="badge is-unknown">미확인</strong></li>
             <li><span>영어 상담</span><strong class="badge is-unknown">미확인</strong></li>
           </ul>
-          
-          <p class="clinic-summary">공식 마운자로 안내는 온라인 영상 상담 절차를 소개합니다. 처방은 의사 판단에 달려 있으며 보장되지 않습니다.</p>
-          <p class="checked">확인일 2026-11-11 · 최신 내용은 공식 페이지에서 다시 확인하세요.</p>
           <details class="card-more">
             <summary>상세 정보 펼쳐보기</summary>
+            <p class="clinic-summary">공식 마운자로 안내는 온라인 영상 상담 절차를 소개합니다. 처방은 의사 판단에 달려 있으며 보장되지 않습니다.</p>
+            <p class="checked">확인일 2026-11-11 · 최신 내용은 공식 페이지에서 다시 확인하세요.</p>
             <dl class="detail-list">
               <div class="detail"><dt>주소</dt><dd>〒060-0806 北海道札幌市北区北6条西4丁目2-7 J1札幌北口ビル2階</dd></div>
               <div class="detail"><dt>전화</dt><dd><a href="tel:+81112111244">+81-11-211-1244</a></dd></div>
@@ -1403,17 +1442,17 @@
             <h4 class="clinic-name">Asteria Clinic<small>アステリアクリニック</small></h4>
             <span class="area-pill">주오구</span>
           </div>
+          
           <ul class="compare">
             <li><span>온라인 상담 안내</span><strong class="badge is-yes">확인</strong></li>
             <li><span>한국 체류 중 상담</span><strong class="badge is-unknown">미확인</strong></li>
             <li><span>한국어 진료</span><strong class="badge is-unknown">미확인</strong></li>
             <li><span>영어 상담</span><strong class="badge is-unknown">미확인</strong></li>
           </ul>
-          
-          <p class="clinic-summary">공식 마운자로 안내는 온라인 상담·처방 절차를 게시합니다. 별도의 온라인 진료 안내는 예약 후 LINE 등록과 화상 상담을 설명합니다. 처방 여부는 의사 판단에 따릅니다.</p>
-          <p class="checked">확인일 2026-11-11 · 최신 내용은 공식 페이지에서 다시 확인하세요.</p>
           <details class="card-more">
             <summary>상세 정보 펼쳐보기</summary>
+            <p class="clinic-summary">공식 마운자로 안내는 온라인 상담·처방 절차를 게시합니다. 별도의 온라인 진료 안내는 예약 후 LINE 등록과 화상 상담을 설명합니다. 처방 여부는 의사 판단에 따릅니다.</p>
+            <p class="checked">확인일 2026-11-11 · 최신 내용은 공식 페이지에서 다시 확인하세요.</p>
             <dl class="detail-list">
               <div class="detail"><dt>주소</dt><dd>〒060-0061 北海道札幌市中央区南1条西4丁目20-1 ビッグタワー大通公園2F</dd></div>
               <div class="detail"><dt>전화</dt><dd><a href="tel:0120706860">0120-706-860 (일본 국내 무료전화)</a><span class="mini-note">일본 국내 무료전화 번호로, 해외에서는 연결되지 않을 수 있습니다.</span></dd></div>
@@ -1430,30 +1469,30 @@
           </details>
         </article>
         </div>
-      </section>
+      </details>
 
-      <section class="city-section" id="nagoya" aria-labelledby="nagoya-title">
-        <div class="city-heading">
+      <details class="city-folder city-section" id="nagoya">
+        <summary>
           <h3 id="nagoya-title">나고야</h3>
           <span>Nagoya · 3곳</span>
-        </div>
+        </summary>
         <div class="clinic-grid">
         <article class="clinic-card" id="nagoya-velvaere-honjin-clinic" data-city="nagoya" data-search="Velvaere Honjin Clinic ヴェルヴァーレ本陣クリニック 나카무라구 나고야 공식 페이지는 마운자로 온라인 진료를 명시하고, 온라인 진료 뒤 의사가 처방 가능 여부를 판단한다고 안내합니다.">
           <div class="clinic-top">
             <h4 class="clinic-name">Velvaere Honjin Clinic<small>ヴェルヴァーレ本陣クリニック</small></h4>
             <span class="area-pill">나카무라구</span>
           </div>
+          
           <ul class="compare">
             <li><span>온라인 상담 안내</span><strong class="badge is-yes">확인</strong></li>
             <li><span>한국 체류 중 상담</span><strong class="badge is-unknown">미확인</strong></li>
             <li><span>한국어 진료</span><strong class="badge is-unknown">미확인</strong></li>
             <li><span>영어 상담</span><strong class="badge is-unknown">미확인</strong></li>
           </ul>
-          
-          <p class="clinic-summary">공식 페이지는 마운자로 온라인 진료를 명시하고, 온라인 진료 뒤 의사가 처방 가능 여부를 판단한다고 안내합니다.</p>
-          <p class="checked">확인일 2026-11-11 · 최신 내용은 공식 페이지에서 다시 확인하세요.</p>
           <details class="card-more">
             <summary>상세 정보 펼쳐보기</summary>
+            <p class="clinic-summary">공식 페이지는 마운자로 온라인 진료를 명시하고, 온라인 진료 뒤 의사가 처방 가능 여부를 판단한다고 안내합니다.</p>
+            <p class="checked">확인일 2026-11-11 · 최신 내용은 공식 페이지에서 다시 확인하세요.</p>
             <dl class="detail-list">
               <div class="detail"><dt>주소</dt><dd>〒453-0041 愛知県名古屋市中村区本陣通2-19</dd></div>
               <div class="detail"><dt>전화</dt><dd><a href="tel:+81524145151">+81-52-414-5151</a></dd></div>
@@ -1549,17 +1588,17 @@
             <h4 class="clinic-name">MARU Clinic<small>MARUクリニック 内科・糖尿病内科</small></h4>
             <span class="area-pill">나카구</span>
           </div>
+          
           <ul class="compare">
             <li><span>온라인 상담 안내</span><strong class="badge is-yes">확인</strong></li>
             <li><span>한국 체류 중 상담</span><strong class="badge is-unknown">미확인</strong></li>
             <li><span>한국어 진료</span><strong class="badge is-unknown">미확인</strong></li>
             <li><span>영어 상담</span><strong class="badge is-unknown">미확인</strong></li>
           </ul>
-          
-          <p class="clinic-summary">공식 진료 안내에 온라인 마운자로 처방을 게시합니다. 진찰 뒤 의사가 처방 여부를 결정합니다.</p>
-          <p class="checked">확인일 2026-11-11 · 최신 내용은 공식 페이지에서 다시 확인하세요.</p>
           <details class="card-more">
             <summary>상세 정보 펼쳐보기</summary>
+            <p class="clinic-summary">공식 진료 안내에 온라인 마운자로 처방을 게시합니다. 진찰 뒤 의사가 처방 여부를 결정합니다.</p>
+            <p class="checked">확인일 2026-11-11 · 최신 내용은 공식 페이지에서 다시 확인하세요.</p>
             <dl class="detail-list">
               <div class="detail"><dt>주소</dt><dd>〒460-0002 愛知県名古屋市中区丸の内2丁目16-8 フレア丸の内4階</dd></div>
               <div class="detail"><dt>전화</dt><dd><a href="tel:+81522537715">+81-52-253-7715</a></dd></div>
@@ -1655,17 +1694,17 @@
             <h4 class="clinic-name">Hosokawa Surgery Clinic<small>医療法人細川外科クリニック</small></h4>
             <span class="area-pill">나카무라구</span>
           </div>
+          
           <ul class="compare">
             <li><span>온라인 상담 안내</span><strong class="badge is-yes">확인</strong></li>
             <li><span>한국 체류 중 상담</span><strong class="badge is-unknown">미확인</strong></li>
             <li><span>한국어 진료</span><strong class="badge is-unknown">미확인</strong></li>
             <li><span>영어 상담</span><strong class="badge is-unknown">미확인</strong></li>
           </ul>
-          
-          <p class="clinic-summary">공식 온라인 진료 페이지와 병원 안내에서 마운자로 온라인 진료를 확인했습니다. 온라인 상담에서 의사가 적합성을 판단하며 처방이 보장되는 것은 아닙니다.</p>
-          <p class="checked">확인일 2026-11-11 · 최신 내용은 공식 페이지에서 다시 확인하세요.</p>
           <details class="card-more">
             <summary>상세 정보 펼쳐보기</summary>
+            <p class="clinic-summary">공식 온라인 진료 페이지와 병원 안내에서 마운자로 온라인 진료를 확인했습니다. 온라인 상담에서 의사가 적합성을 판단하며 처방이 보장되는 것은 아닙니다.</p>
+            <p class="checked">확인일 2026-11-11 · 최신 내용은 공식 페이지에서 다시 확인하세요.</p>
             <dl class="detail-list">
               <div class="detail"><dt>주소</dt><dd>〒453-0812 愛知県名古屋市中村区西米野町1丁目75-2</dd></div>
               <div class="detail"><dt>전화</dt><dd><a href="tel:+81524819921">+81-52-481-9921</a></dd></div>
@@ -1682,30 +1721,30 @@
           </details>
         </article>
         </div>
-      </section>
+      </details>
 
-      <section class="city-section" id="kyoto" aria-labelledby="kyoto-title">
-        <div class="city-heading">
+      <details class="city-folder city-section" id="kyoto">
+        <summary>
           <h3 id="kyoto-title">교토</h3>
           <span>Kyoto · 3곳</span>
-        </div>
+        </summary>
         <div class="clinic-grid">
         <article class="clinic-card" id="kyoto-kajiyama-internal-medicine-clinic" data-city="kyoto" data-search="Kajiyama Internal Medicine Clinic 梶山内科クリニック 시모교구 교토 공식 비만 진료 페이지에서 마운자로 대면·온라인 상담을 안내합니다. 온라인 상담 예약은 LINE을 통해야 한다고 설명하며, 진료 뒤 처방 여부는 의사 판단에 달려 있습니다.">
           <div class="clinic-top">
             <h4 class="clinic-name">Kajiyama Internal Medicine Clinic<small>梶山内科クリニック</small></h4>
             <span class="area-pill">시모교구</span>
           </div>
+          
           <ul class="compare">
             <li><span>온라인 상담 안내</span><strong class="badge is-yes">확인</strong></li>
             <li><span>한국 체류 중 상담</span><strong class="badge is-unknown">미확인</strong></li>
             <li><span>한국어 진료</span><strong class="badge is-unknown">미확인</strong></li>
             <li><span>영어 상담</span><strong class="badge is-unknown">미확인</strong></li>
           </ul>
-          
-          <p class="clinic-summary">공식 비만 진료 페이지에서 마운자로 대면·온라인 상담을 안내합니다. 온라인 상담 예약은 LINE을 통해야 한다고 설명하며, 진료 뒤 처방 여부는 의사 판단에 달려 있습니다.</p>
-          <p class="checked">확인일 2026-11-11 · 최신 내용은 공식 페이지에서 다시 확인하세요.</p>
           <details class="card-more">
             <summary>상세 정보 펼쳐보기</summary>
+            <p class="clinic-summary">공식 비만 진료 페이지에서 마운자로 대면·온라인 상담을 안내합니다. 온라인 상담 예약은 LINE을 통해야 한다고 설명하며, 진료 뒤 처방 여부는 의사 판단에 달려 있습니다.</p>
+            <p class="checked">확인일 2026-11-11 · 최신 내용은 공식 페이지에서 다시 확인하세요.</p>
             <dl class="detail-list">
               <div class="detail"><dt>주소</dt><dd>〒600-8898 京都市下京区西七条東御前田町20番地1 京都五条クリニックビル2階</dd></div>
               <div class="detail"><dt>전화</dt><dd><a href="tel:+81753268739">+81-75-326-8739</a></dd></div>
@@ -1801,17 +1840,17 @@
             <h4 class="clinic-name">Kyoto Karasuma Buffalo ED Clinic<small>京都烏丸バッファローEDクリニック</small></h4>
             <span class="area-pill">시모교구</span>
           </div>
+          
           <ul class="compare">
             <li><span>온라인 상담 안내</span><strong class="badge is-yes">확인</strong></li>
             <li><span>한국 체류 중 상담</span><strong class="badge is-unknown">미확인</strong></li>
             <li><span>한국어 진료</span><strong class="badge is-unknown">미확인</strong></li>
             <li><span>영어 상담</span><strong class="badge is-unknown">미확인</strong></li>
           </ul>
-          
-          <p class="clinic-summary">공식 마운자로 안내에는 온라인 상담 절차와 LINE 경로가 게시되어 있습니다. 처방은 의사 평가에 따라 달라질 수 있습니다.</p>
-          <p class="checked">확인일 2026-11-11 · 최신 내용은 공식 페이지에서 다시 확인하세요.</p>
           <details class="card-more">
             <summary>상세 정보 펼쳐보기</summary>
+            <p class="clinic-summary">공식 마운자로 안내에는 온라인 상담 절차와 LINE 경로가 게시되어 있습니다. 처방은 의사 평가에 따라 달라질 수 있습니다.</p>
+            <p class="checked">확인일 2026-11-11 · 최신 내용은 공식 페이지에서 다시 확인하세요.</p>
             <dl class="detail-list">
               <div class="detail"><dt>주소</dt><dd>〒600-8421 京都市下京区童侍者町161 綾小路スクエア702号室</dd></div>
               <div class="detail"><dt>전화</dt><dd><a href="tel:+81755855973">+81-75-585-5973</a></dd></div>
@@ -1907,17 +1946,17 @@
             <h4 class="clinic-name">Daibikai Clinic Kyoto Karasuma<small>大美会クリニック 京都烏丸院</small></h4>
             <span class="area-pill">시모교구</span>
           </div>
+          
           <ul class="compare">
             <li><span>온라인 상담 안내</span><strong class="badge is-yes">확인</strong></li>
             <li><span>한국 체류 중 상담</span><strong class="badge is-unknown">미확인</strong></li>
             <li><span>한국어 진료</span><strong class="badge is-unknown">미확인</strong></li>
             <li><span>영어 상담</span><strong class="badge is-unknown">미확인</strong></li>
           </ul>
-          
-          <p class="clinic-summary">공식 마운자로 페이지는 온라인 상담 흐름을 안내하고, 예약 시스템에는 마운자로 상담용 온라인 다이어트 외래가 있습니다. 처방은 상담 후 의료진이 판단합니다.</p>
-          <p class="checked">확인일 2026-11-11 · 최신 내용은 공식 페이지에서 다시 확인하세요.</p>
           <details class="card-more">
             <summary>상세 정보 펼쳐보기</summary>
+            <p class="clinic-summary">공식 마운자로 페이지는 온라인 상담 흐름을 안내하고, 예약 시스템에는 마운자로 상담용 온라인 다이어트 외래가 있습니다. 처방은 상담 후 의료진이 판단합니다.</p>
+            <p class="checked">확인일 2026-11-11 · 최신 내용은 공식 페이지에서 다시 확인하세요.</p>
             <dl class="detail-list">
               <div class="detail"><dt>주소</dt><dd>〒600-8006 京都市下京区四条通柳馬場西入 立売中之町92 AOKIビル6F</dd></div>
               <div class="detail"><dt>전화</dt><dd><a href="tel:0120373889">0120-373-889 (일본 국내 무료전화)</a><span class="mini-note">일본 국내 무료전화 번호로, 해외에서는 연결되지 않을 수 있습니다.</span></dd></div>
@@ -1934,11 +1973,13 @@
           </details>
         </article>
         </div>
-      </section>
+      </details>
       </div>
     </section>
     <section id="korean">
       <div class="wrap">
+        <details class="fold">
+          <summary>한국어 진료와 한국 체류 중 상담</summary>
         <div class="section-head">
           <div>
             <p class="section-kicker">조건은 서로 다릅니다</p>
@@ -1982,10 +2023,13 @@
           </article>
         </div>
         <p class="phrase-disclaimer">후쿠오카 Mirai Medical Clinic(miraimedical.com)과 세타가야 Mirai Medical Clinic(mirai-medical.clinic)은 다른 기관입니다. 도쿄도 보건의료국의 외국인 환자 언어 지원 목록은 마운자로 처방이나 한국 체류 중 상담을 확인해 주는 자료가 아니므로 이 목록에 넣지 않았습니다.</p>
+        </details>
       </div>
     </section>
     <section id="line-guide">
       <div class="wrap">
+        <details class="fold">
+          <summary>LINE 문의 문장 가이드</summary>
         <div class="section-head">
           <div>
             <p class="section-kicker">문의 문장 예시</p>
@@ -2068,10 +2112,13 @@
             </article>
         </div>
         <p class="phrase-disclaimer">위 문장은 일반적인 문의 표현의 예시이며, 특정 의료기관의 공식 답변이나 상담 가능 여부를 의미하지 않습니다. 실제 진료·처방 가능 여부는 해당 기관에 확인해야 합니다.</p>
+        </details>
       </div>
     </section>
     <section id="safety">
       <div class="wrap">
+        <details class="fold">
+          <summary>안전 안내와 공식 자료</summary>
         <div class="section-head">
           <div>
             <p class="section-kicker">한국 이용 관련 안내</p>
@@ -2089,11 +2136,7 @@
           <h2>마운자로는 처방의약품입니다.</h2>
           <p>일본 후생노동성은 제2형 당뇨병 치료제가 미용·체중감량 목적으로 사용될 때 안전성과 유효성이 확인되지 않았다고 경고합니다. 이 페이지는 사용이나 체중감량을 권하지 않으며 의료 조언을 대신하지 않습니다. <a href="https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/iyakuhin/kojinyunyu/index_00003.html" target="_blank" rel="noopener noreferrer">일본 후생노동성 안전 안내</a></p>
         </div>
-      </div>
-    </section>
-    <section class="sources-section" id="sources">
-      <div class="wrap">
-        <div class="section-head">
+        <div class="section-head" id="sources">
           <div>
             <p class="section-kicker">공식 자료·검토 근거</p>
             <h2>공식 원문 자료</h2>
@@ -2107,6 +2150,7 @@
           <a class="source" href="https://www.yna.co.kr/view/AKR20261111158151017" target="_blank" rel="noopener noreferrer"><small>연합뉴스 · 2026년 11월 11일</small><strong>외국에서 구매한 비만약 휴대 반입, 직구는 불가</strong><span>식약처·관세청 발표를 전하며, 휴대 반입과 달리 의약품 직접구매는 인정되지 않는다고 적습니다.</span></a>
           <a class="source" href="https://www.mfds.go.kr/brd/m_99/view.do?seq=50487" target="_blank" rel="noopener noreferrer"><small>식품의약품안전처 · 2026년 11월 11일</small><strong>자가 치료용 의약품 개인 휴대 반입 허용 보도자료</strong><span>관세청과 함께 낸 휴대 반입 안내입니다. 우편·특송 직접구매 허용 발표는 아닙니다.</span></a>
         </div>
+        </details>
       </div>
     </section>
   </main>
@@ -2124,8 +2168,17 @@
       </div>
     </div>
   </footer>
-  <a class="meal-side" href="/support.html"><span class="meal-emoji" aria-hidden="true">☕</span><span class="meal-label">커피 한 잔</span></a>
-  <script src="/filter.js?v=2"></script>
+  <div class="side-stack">
+    <a class="fx-side" href="#prices" title="100엔 기준 유럽중앙은행 고시. 카드사나 의료기관 청구 환율이 아닙니다. 주말과 공휴일은 직전 영업일입니다.">
+    <span class="fx-side-kicker">참고 환율</span>
+    <span class="fx-side-unit">100엔</span>
+    <strong data-fx-value>835.40원</strong>
+    <span data-fx-date>2026.11.12</span>
+  </a>
+    <a class="meal-side" href="/support.html"><span class="meal-emoji" aria-hidden="true">☕</span><span class="meal-label">커피 한 잔</span></a>
+  </div>
+  <script src="/filter.js?v=3"></script>
+  <script src="/rate.js?v=3"></script>
   <script src="/copy.js"></script>
 </body>
 </html>

@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 """Generate static pages. Replace YOUR_PUBLIC_SITE_URL before publishing."""
+import json
 from html import escape
 from pathlib import Path
 from urllib.parse import quote
+from urllib.request import Request, urlopen
 
 SITE_URL = "https://japan-mounjaro-directory.netlify.app"
 SITE_NAME = "마운자로 원정대"
@@ -609,17 +611,17 @@ def card(clinic):
             <h4 class="clinic-name">{e(clinic['name'])}<small>{e(clinic['jp'])}</small></h4>
             <span class="area-pill">{e(clinic['area'])}</span>
           </div>
+          {hours_note}
           <ul class="compare">
             {status_item("온라인 상담 안내", online_value, online_kind)}
             {status_item("한국 체류 중 상담", korea_value, korea_kind)}
             {status_item("한국어 진료", korean_status(clinic)[0], korean_status(clinic)[1])}
             {status_item("영어 상담", english_value, english_kind)}
           </ul>
-          {hours_note}
-          <p class="clinic-summary">{e(clinic['summary'])}</p>
-          <p class="checked">확인일 {e(checked)} · 최신 내용은 공식 페이지에서 다시 확인하세요.</p>
           <details class="card-more">
             <summary>상세 정보 펼쳐보기</summary>
+            <p class="clinic-summary">{e(clinic['summary'])}</p>
+            <p class="checked">확인일 {e(checked)} · 최신 내용은 공식 페이지에서 다시 확인하세요.</p>
             <dl class="detail-list">
               {row("주소", e(clinic["address"]))}
               {row("전화", phone_html(clinic))}
@@ -646,14 +648,14 @@ def directory():
         cards = "".join(card(c) for c in group)
         parts.append(
             f"""
-      <section class="city-section" id="{city_id}" aria-labelledby="{city_id}-title">
-        <div class="city-heading">
+      <details class="city-folder city-section" id="{city_id}">
+        <summary>
           <h3 id="{city_id}-title">{name}</h3>
           <span>{en} · {len(group)}곳</span>
-        </div>
+        </summary>
         <div class="clinic-grid">{cards}
         </div>
-      </section>"""
+      </details>"""
         )
     return "\n".join(nav), "\n".join(parts)
 
@@ -686,7 +688,7 @@ def head(title, description, path):
   <title>{e(title)}</title>
   <link rel="canonical" href="{e(url)}">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="/styles.css?v=9">
+  <link rel="stylesheet" href="/styles.css?v=16">
   <link rel="sitemap" type="application/xml" href="/sitemap.xml">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="ko_KR">
@@ -702,10 +704,96 @@ def head(title, description, path):
 
 
 INDEX_DESC = "도쿄·오사카·후쿠오카·삿포로·나고야·교토·지바의 의료기관이 공개한 마운자로 온라인 상담 정보와 연락처를 정리한 독립 정보 디렉터리입니다. 한국 체류 중 상담 가능 여부는 각 기관 공식 페이지의 문구를 옮겼습니다."
+
+FX_API = "https://api.frankfurter.dev/v1/latest?from=JPY&to=KRW"
+# dose, Korea pharmacy average (4 pens, my-doctor 2026-11-12), reported supply price, Japan NHI price per kit.
+DOSE_ROWS = [
+    ("2.5mg", 303110, 278066, 1443),
+    ("5mg", 391230, 369307, 2886),
+    ("7.5mg", 545210, 521377, 4329),
+    ("10mg", 544600, 521377, 5772),
+    ("12.5mg", 703170, 675131, 7215),
+    ("15mg", 712610, 675131, 8658),
+]
+
+
+def fetch_fx():
+    try:
+        request = Request(FX_API, headers={"User-Agent": "japan-mounjaro-directory"})
+        with urlopen(request, timeout=8) as response:
+            data = json.load(response)
+        return float(data["rates"]["KRW"]), data["date"]
+    except Exception:
+        return None, None
+
+
+def fx_tab(per_jpy, fx_date):
+    if per_jpy and fx_date:
+        value = f"{per_jpy * 100:,.2f}원"
+        date_text = fx_date.replace("-", ".")
+    else:
+        value = "확인 중"
+        date_text = ""
+    return f"""<a class="fx-side" href="#prices" title="100엔 기준 유럽중앙은행 고시. 카드사나 의료기관 청구 환율이 아닙니다. 주말과 공휴일은 직전 영업일입니다.">
+    <span class="fx-side-kicker">참고 환율</span>
+    <span class="fx-side-unit">100엔</span>
+    <strong data-fx-value>{value}</strong>
+    <span data-fx-date>{date_text}</span>
+  </a>"""
+
+
+def price_section(per_jpy):
+    rows = []
+    for dose, average, supply, kit in DOSE_ROWS:
+        four = kit * 4
+        estimate = f"{round(four * per_jpy):,}원" if per_jpy else "시세 확인 중"
+        rows.append(
+            "<tr>"
+            f"<th scope=\"row\">{dose}</th>"
+            f"<td>{average:,}원</td>"
+            f"<td>{supply:,}원</td>"
+            f"<td title=\"키트당 {kit:,}엔 × 4회\">{four:,}엔</td>"
+            f"<td data-jpy=\"{four}\">{estimate}</td>"
+            "</tr>"
+        )
+    return f"""<section id="prices">
+      <div class="wrap">
+        <details class="fold">
+          <summary>용량별 한·일 가격 추산</summary>
+          <p class="price-lead">4주분(주 1회 × 4) 참고 금액입니다. 병원·약국·카드사가 청구하는 정확한 가격이 아니고, 어디가 싼지 고르라는 비교도 아닙니다.</p>
+          <div class="price-wrap">
+            <table class="price-table">
+              <caption class="sr-only">용량별 한국 약국 약값 평균, 한국 공급가, 일본 공적 약가, 원화 추산</caption>
+              <thead>
+                <tr>
+                  <th scope="col">용량</th>
+                  <th scope="col">한국 약국 약값 평균</th>
+                  <th scope="col">한국 공급가</th>
+                  <th scope="col">일본 공적 약가 4회</th>
+                  <th scope="col">일본 약가 원화 추산</th>
+                </tr>
+              </thead>
+              <tbody>
+                {''.join(rows)}
+              </tbody>
+            </table>
+          </div>
+          <ul class="price-notes">
+            <li>한국 평균은 가격 비교 서비스 <a href="https://my-doctor.io/medical-cost/%EB%A7%88%EC%9A%B4%EC%9E%90%EB%A1%9C" target="_blank" rel="noopener noreferrer">나만의닥터</a>가 2026년 11월 12일에 적은 약국 약값입니다. 공식 통계가 아니고, 진료비·검사비는 들어 있지 않습니다. 수집 규모는 2.5mg 2,583곳에서 15mg 1,214곳까지입니다.</li>
+            <li>한국 공급가는 환자가 내는 판매가가 아닙니다. 2.5–10mg는 <a href="https://www.khan.co.kr/article/202606090600051" target="_blank" rel="noopener noreferrer">경향신문 2026년 6월 9일</a> 보도의 의료기관 구입 단가이고, 12.5mg·15mg는 <a href="https://www.medicaltimes.com/Main/News/NewsView.html?ID=1169119" target="_blank" rel="noopener noreferrer">메디칼타임즈 2026년 6월 8일</a> 보도의 부가세 포함 표준 단가입니다.</li>
+            <li>일본 칸은 자유진료 청구 평균이 아닙니다. <a href="https://www.mhlw.go.jp/content/10808000/001699504.pdf" target="_blank" rel="noopener noreferrer">후생노동성</a>이 2026년 8월 1일부터 적용한 보험 약가를 4회로 둔 약값입니다. 체중 감량 목적의 자유진료비는 기관마다 따로 정합니다.</li>
+            <li>원화 추산은 일본 약가에 이 페이지의 참고 환율을 곱한 값입니다. 환전 수수료와 진료비는 빠졌고, 페이지를 열 때 그날 고시 환율로 다시 계산합니다.</li>
+          </ul>
+        </details>
+      </div>
+    </section>"""
 SUPPORT_DESC = "이 안내가 도움이 되셨다면 개발자에게 커피 한 잔 사주세요."
 
 
 def build_index():
+    per_jpy, fx_date = fetch_fx()
+    fx_html = fx_tab(per_jpy, fx_date)
+    price_html = price_section(per_jpy)
     nav, sections = directory()
     chips = ['<button class="chip" type="button" data-city-filter="all" aria-pressed="true">전체</button>']
     for city_id, name, _en in CITIES:
@@ -735,10 +823,11 @@ def build_index():
       <nav aria-label="주요 메뉴">
         <ul class="nav-links">
           <li><a href="#directory">도시별 목록</a></li>
+          <li><a href="#prices">가격 추산</a></li>
           <li><a href="#korean">한국어 진료</a></li>
           <li><a href="#line-guide">문의 문장</a></li>
           <li><a href="#safety">안전 안내</a></li>
-          <li><a href="#sources">출처</a></li>
+          <li><a href="#safety">출처</a></li>
           <li><a class="meal-nav" href="/support.html"><span class="meal-emoji" aria-hidden="true">☕</span> 커피 한 잔</a></li>
         </ul>
       </nav>
@@ -748,8 +837,15 @@ def build_index():
     <section class="hero" aria-labelledby="page-title">
       <div class="wrap hero-grid">
         <div>
-          <p class="eyebrow">일본 공개 진료 정보를 모은 목록</p>
-          <h1 id="page-title">{SITE_NAME}</h1>
+          <div class="hero-brand">
+            <div class="mascot-frame">
+              <img src="/mascot.jpg" alt="주황 초밥을 쓰고 펜을 든 마운자로 원정대 캐릭터">
+            </div>
+            <div>
+              <p class="eyebrow">일본 공개 진료 정보를 모은 목록</p>
+              <h1 id="page-title">{SITE_NAME}</h1>
+            </div>
+          </div>
           <p class="hero-copy">공식 페이지에 공개된 마운자로 온라인 상담 정보와 연락처를 도시별로 모았습니다. 상담과 처방은 의료진 판단에 달려 있습니다. 이 사이트는 일본 의료기관의 공식 웹사이트, 광고, 제휴 서비스가 아닌 독립 정보 안내입니다.</p>
           <form class="finder" role="search">
             <label for="clinic-search">기관 찾기</label>
@@ -779,6 +875,7 @@ def build_index():
         <p><strong>의료·법률 안내.</strong> 이 페이지는 의료기관이 아니며 진료·예약·처방·의약품 판매·배송을 제공하지 않고, 개인정보나 건강정보를 수집하지 않습니다. 외부 링크는 각 기관의 공식 페이지 또는 공식 예약·문의 채널로 이동합니다. 한국 보건복지부 자료는 비의료인이 특정 의료기관의 위치·연락처·진료시간 등을 상세히 게시해 내원을 유도하는 유형에 의료광고상 쟁점이 있을 수 있다고 설명합니다. 이 페이지의 법적 분류는 확정되지 않았으므로 공개·운영 전 국내 법률 검토가 필요합니다. 최신 정보는 각 기관의 공식 페이지에서 확인하세요.</p>
       </div>
     </div>
+    {price_html}
     <section id="directory">
       <div class="wrap">
         <div class="section-head">
@@ -786,7 +883,7 @@ def build_index():
             <p class="section-kicker">공식 페이지 공개 정보</p>
             <h2>도시별 의료기관 안내</h2>
           </div>
-          <p class="section-intro">공식 페이지에 마운자로 상담 안내와 공개 연락 경로가 있는 곳을 담았습니다. 나열 순서는 자료를 정리한 순서이며 순위가 아닙니다. 주소와 운영시간은 카드를 펼치면 나옵니다. 지도 링크도 그 안에 있습니다.</p>
+          <p class="section-intro">도시를 누르면 그 도시의 기관만 펼쳐집니다. 기관 이름의 상세를 누르면 주소와 연락처가 나옵니다. 나열 순서는 자료를 정리한 순서이며 순위가 아닙니다.</p>
         </div>
         <p id="filter-empty" hidden>해당하는 기관이 없습니다.</p>
         <nav aria-label="도시 바로가기"><ul class="city-nav">{nav}</ul></nav>
@@ -795,6 +892,8 @@ def build_index():
     </section>
     <section id="korean">
       <div class="wrap">
+        <details class="fold">
+          <summary>한국어 진료와 한국 체류 중 상담</summary>
         <div class="section-head">
           <div>
             <p class="section-kicker">조건은 서로 다릅니다</p>
@@ -838,10 +937,13 @@ def build_index():
           </article>
         </div>
         <p class="phrase-disclaimer">후쿠오카 Mirai Medical Clinic(miraimedical.com)과 세타가야 Mirai Medical Clinic(mirai-medical.clinic)은 다른 기관입니다. 도쿄도 보건의료국의 외국인 환자 언어 지원 목록은 마운자로 처방이나 한국 체류 중 상담을 확인해 주는 자료가 아니므로 이 목록에 넣지 않았습니다.</p>
+        </details>
       </div>
     </section>
     <section id="line-guide">
       <div class="wrap">
+        <details class="fold">
+          <summary>LINE 문의 문장 가이드</summary>
         <div class="section-head">
           <div>
             <p class="section-kicker">문의 문장 예시</p>
@@ -853,10 +955,13 @@ def build_index():
           {phrase_items()}
         </div>
         <p class="phrase-disclaimer">위 문장은 일반적인 문의 표현의 예시이며, 특정 의료기관의 공식 답변이나 상담 가능 여부를 의미하지 않습니다. 실제 진료·처방 가능 여부는 해당 기관에 확인해야 합니다.</p>
+        </details>
       </div>
     </section>
     <section id="safety">
       <div class="wrap">
+        <details class="fold">
+          <summary>안전 안내와 공식 자료</summary>
         <div class="section-head">
           <div>
             <p class="section-kicker">한국 이용 관련 안내</p>
@@ -874,11 +979,7 @@ def build_index():
           <h2>마운자로는 처방의약품입니다.</h2>
           <p>일본 후생노동성은 제2형 당뇨병 치료제가 미용·체중감량 목적으로 사용될 때 안전성과 유효성이 확인되지 않았다고 경고합니다. 이 페이지는 사용이나 체중감량을 권하지 않으며 의료 조언을 대신하지 않습니다. <a href="https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/iyakuhin/kojinyunyu/index_00003.html" target="_blank" rel="noopener noreferrer">일본 후생노동성 안전 안내</a></p>
         </div>
-      </div>
-    </section>
-    <section class="sources-section" id="sources">
-      <div class="wrap">
-        <div class="section-head">
+        <div class="section-head" id="sources">
           <div>
             <p class="section-kicker">공식 자료·검토 근거</p>
             <h2>공식 원문 자료</h2>
@@ -892,6 +993,7 @@ def build_index():
           <a class="source" href="https://www.yna.co.kr/view/AKR20261111158151017" target="_blank" rel="noopener noreferrer"><small>연합뉴스 · 2026년 11월 11일</small><strong>외국에서 구매한 비만약 휴대 반입, 직구는 불가</strong><span>식약처·관세청 발표를 전하며, 휴대 반입과 달리 의약품 직접구매는 인정되지 않는다고 적습니다.</span></a>
           <a class="source" href="https://www.mfds.go.kr/brd/m_99/view.do?seq=50487" target="_blank" rel="noopener noreferrer"><small>식품의약품안전처 · 2026년 11월 11일</small><strong>자가 치료용 의약품 개인 휴대 반입 허용 보도자료</strong><span>관세청과 함께 낸 휴대 반입 안내입니다. 우편·특송 직접구매 허용 발표는 아닙니다.</span></a>
         </div>
+        </details>
       </div>
     </section>
   </main>
@@ -909,8 +1011,12 @@ def build_index():
       </div>
     </div>
   </footer>
-  <a class="meal-side" href="/support.html"><span class="meal-emoji" aria-hidden="true">☕</span><span class="meal-label">커피 한 잔</span></a>
-  <script src="/filter.js?v=2"></script>
+  <div class="side-stack">
+    {fx_html}
+    <a class="meal-side" href="/support.html"><span class="meal-emoji" aria-hidden="true">☕</span><span class="meal-label">커피 한 잔</span></a>
+  </div>
+  <script src="/filter.js?v=3"></script>
+  <script src="/rate.js?v=3"></script>
   <script src="/copy.js"></script>
 </body>
 </html>
@@ -970,7 +1076,7 @@ def build_404():
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex">
   <title>페이지를 찾을 수 없습니다 | 마운자로 원정대</title>
-  <link rel="stylesheet" href="/styles.css?v=9">
+  <link rel="stylesheet" href="/styles.css?v=16">
 </head>
 <body>
   <main class="missing">

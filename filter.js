@@ -26,7 +26,12 @@
       if (ok) shown += 1;
     });
     sections.forEach(function (section) {
-      section.hidden = !section.querySelector(".clinic-card:not([hidden])");
+      var any = !!section.querySelector(".clinic-card:not([hidden])");
+      section.hidden = !any;
+      if (section.tagName === "DETAILS") {
+        if (query) section.open = any;
+        else section.open = city !== "all" && section.id === city;
+      }
     });
     if (empty) empty.hidden = shown !== 0;
     paint();
