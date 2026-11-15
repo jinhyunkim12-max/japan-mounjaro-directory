@@ -689,7 +689,7 @@ def head(title, description, path):
   <title>{e(title)}</title>
   <link rel="canonical" href="{e(url)}">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="/styles.css?v=17">
+  <link rel="stylesheet" href="/styles.css?v=18">
   <link rel="sitemap" type="application/xml" href="/sitemap.xml">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="ko_KR">
@@ -1062,7 +1062,8 @@ def build_support():
           <p class="copy-status" id="copy-status" data-copy-status role="status" aria-live="polite"></p>
         </div>
       </div>
-      <p class="footnote">이 페이지는 의료기관 정보와 별도로 운영됩니다.</p>
+      <p class="coffee-alt"><a class="coffee-link" href="https://buymeacoffee.com/secondary.mag" target="_blank" rel="noopener noreferrer">Buy Me a Coffee로 커피 사주기</a></p>
+      <p class="footnote">이 페이지는 의료기관 정보와 별도로 운영됩니다. 계좌 이체와 Buy Me a Coffee는 같은 안내의 다른 방법입니다.</p>
     </section>
   </main>
   <footer class="site-footer">
@@ -1091,7 +1092,7 @@ def build_404():
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex">
   <title>페이지를 찾을 수 없습니다 | 마운자로 원정대</title>
-  <link rel="stylesheet" href="/styles.css?v=17">
+  <link rel="stylesheet" href="/styles.css?v=18">
 </head>
 <body>
   <main class="missing">
