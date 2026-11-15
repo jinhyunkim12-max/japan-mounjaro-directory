@@ -599,6 +599,14 @@ def card(clinic):
     city_name = CITY_NAME[clinic["city"]]
     search = " ".join([clinic["name"], clinic["jp"], clinic["area"], city_name, clinic["summary"]])
     korea_value, korea_kind = korea_status(clinic)
+    korean_value, korean_kind = korean_status(clinic)
+    korean_flag = "yes" if korean_kind == "is-yes" else "unknown"
+    if korea_value == "안내 있음":
+        stay_flag = "yes"
+    elif korea_value == "출발 전 안내":
+        stay_flag = "pre"
+    else:
+        stay_flag = "unknown"
     english_value, english_kind = english_status(clinic)
     online_value, online_kind = online_status(clinic)
     hours_note = ""
@@ -606,12 +614,14 @@ def card(clinic):
         hours_note = '<p class="hours-flag">공식 페이지와 예약 화면의 시간 표기가 다릅니다. 아래 상세에 출처별로 적었습니다.</p>'
     line = line_details() if has_line(clinic) else ""
     return f"""
-        <article class="clinic-card" id="{e(clinic['city'])}-{e(clinic['name'].lower().replace(' ', '-'))}" data-city="{e(clinic['city'])}" data-search="{e(search)}">
+        <article class="clinic-card" id="{e(clinic['city'])}-{e(clinic['name'].lower().replace(' ', '-'))}" data-city="{e(clinic['city'])}" data-search="{e(search)}" data-korean="{korean_flag}" data-stay="{stay_flag}">
           <div class="clinic-top">
             <h4 class="clinic-name">{e(clinic['name'])}<small>{e(clinic['jp'])}</small></h4>
             <span class="area-pill">{e(clinic['area'])}</span>
           </div>
           {hours_note}
+          <p class="clinic-summary">{e(clinic['summary'])}</p>
+          <p class="checked">확인일 {e(checked)} · 미확인은 불가능이 아닙니다.</p>
           <ul class="compare">
             {status_item("온라인 상담 안내", online_value, online_kind)}
             {status_item("한국 체류 중 상담", korea_value, korea_kind)}
@@ -619,9 +629,7 @@ def card(clinic):
             {status_item("영어 상담", english_value, english_kind)}
           </ul>
           <details class="card-more">
-            <summary>상세 정보 펼쳐보기</summary>
-            <p class="clinic-summary">{e(clinic['summary'])}</p>
-            <p class="checked">확인일 {e(checked)} · 최신 내용은 공식 페이지에서 다시 확인하세요.</p>
+            <summary>주소와 연락처</summary>
             <dl class="detail-list">
               {row("주소", e(clinic["address"]))}
               {row("전화", phone_html(clinic))}
@@ -705,7 +713,7 @@ def head(title, description, path):
 """
 
 
-INDEX_DESC = "일본 도쿄·오사카·후쿠오카 등 7개 도시의 마운자로 관련 의료기관 정보를 한국어로 확인하세요. 공식 홈페이지, 온라인 상담 안내, 한국어 진료 여부, 연락처와 진료 정보를 정리했습니다. 처방 여부는 의료진의 판단에 따릅니다."
+INDEX_DESC = "일본 주요 도시의 마운자로 관련 의료기관 공개 정보, 한국어 진료 여부, 온라인 상담 조건과 공식 연락처를 확인하세요. 확인되지 않은 진료 가능성은 적지 않았고, 처방 여부는 의료진 판단입니다."
 
 FX_API = "https://api.frankfurter.dev/v1/latest?from=JPY&to=KRW"
 # dose, Korea pharmacy average (4 pens, my-doctor 2026-11-12), reported supply price, Japan NHI price per kit.
@@ -779,10 +787,10 @@ def price_section(per_jpy, expanded=False):
               <thead>
                 <tr>
                   <th scope="col">용량</th>
-                  <th scope="col">한국 약국 약값 평균</th>
-                  <th scope="col">한국 공급가</th>
-                  <th scope="col">일본 공적 약가 4회</th>
-                  <th scope="col">일본 약가 원화 추산</th>
+                  <th scope="col">한국 약국 판매가 참고</th>
+                  <th scope="col">한국 공급가 · 환자 가격 아님</th>
+                  <th scope="col">일본 보험 약가 4회 · 자유진료비 아님</th>
+                  <th scope="col">보험 약가의 원화 추산</th>
                 </tr>
               </thead>
               <tbody>
@@ -814,7 +822,7 @@ def build_index():
             f'<button class="chip" type="button" data-city-filter="{city_id}" aria-pressed="false">{e(name)} {count}</button>'
         )
     chip_html = "\n".join(chips)
-    html = head("일본 마운자로 병원·온라인 상담 정보 총정리 | 마운자로 원정대", INDEX_DESC, "/")
+    html = head("일본 마운자로 병원 정보 | 도쿄·오사카·후쿠오카 진료 안내", INDEX_DESC, "/")
     html += f"""  <script type="application/ld+json">
   {{
     "@context": "https://schema.org",
@@ -858,7 +866,13 @@ def build_index():
               <h1 id="page-title">일본 마운자로 병원 및 온라인 상담 정보</h1>
             </div>
           </div>
-          <p class="hero-copy">공식 페이지에 공개된 마운자로 온라인 상담 정보와 연락처를 도시별로 모았습니다. 상담과 처방은 의료진 판단에 달려 있습니다. 이 사이트는 일본 의료기관의 공식 웹사이트, 광고, 제휴 서비스가 아닌 독립 정보 안내입니다.</p>
+          <p class="hero-copy">도시별 의료기관, 한국어 진료, 한국 체류 중 상담은 서로 다른 조건입니다. 공식 페이지에 있는 문장만 적었고, 처방은 의료진 판단입니다.</p>
+          <nav class="guide-links" aria-label="먼저 확인할 질문">
+            <a href="/guides/korean-care/">한국어로 진료받을 수 있나</a>
+            <a href="/guides/korea-stay/">한국에 있을 때 상담되나</a>
+            <a href="/guides/cost/">약값은 어떤 기준인가</a>
+            <a href="/guides/prescription/">처방과 반입은 어떻게 다른가</a>
+          </nav>
           <form class="finder" role="search">
             <label for="clinic-search">기관 찾기</label>
             <input id="clinic-search" type="search" placeholder="기관명, 일본어 이름, 지역" autocomplete="off">
@@ -866,6 +880,17 @@ def build_index():
           <div class="chip-row" role="group" aria-label="도시 선택">
             {chip_html}
           </div>
+          <div class="chip-row" role="group" aria-label="한국어 진료">
+            <button class="chip" type="button" data-korean-filter="all" aria-pressed="true">한국어 전체</button>
+            <button class="chip" type="button" data-korean-filter="yes" aria-pressed="false">한국어 진료 확인</button>
+            <button class="chip" type="button" data-korean-filter="unknown" aria-pressed="false">한국어 진료 미확인</button>
+          </div>
+          <div class="chip-row" role="group" aria-label="한국 체류 중 상담">
+            <button class="chip" type="button" data-stay-filter="all" aria-pressed="true">체류 상담 전체</button>
+            <button class="chip" type="button" data-stay-filter="yes" aria-pressed="false">한국 체류 중 상담 확인</button>
+            <button class="chip" type="button" data-stay-filter="unknown" aria-pressed="false">한국 체류 중 상담 미확인</button>
+          </div>
+          <p class="microcopy">미확인은 불가능이 아닙니다. 출발 전 상담만 안내된 곳은 위 두 확인 필터에 넣지 않았습니다.</p>
           <ul class="stat-row">
             <li><strong>{len(CITIES)}</strong><span>도시</span></li>
             <li><strong>{len(CLINICS)}</strong><span>기관</span></li>
@@ -1029,7 +1054,7 @@ def build_index():
     {fx_html}
     <a class="meal-side" href="/support.html"><span class="meal-emoji" aria-hidden="true">☕</span><span class="meal-label">커피 한 잔</span></a>
   </div>
-  <script src="/filter.js?v=3"></script>
+  <script src="/filter.js?v=4"></script>
   <script src="/rate.js?v=4"></script>
   <script src="/copy.js"></script>
 </body>
@@ -1053,7 +1078,7 @@ def build_support():
     <section class="support-card" aria-labelledby="support-title">
       <p class="eyebrow">별도 페이지</p>
       <h1 id="support-title"><span class="meal-emoji" aria-hidden="true">☕</span>개발자에게 커피 한 잔</h1>
-      <p class="message">이 안내가 도움이 되셨다면 개발자에게 커피 한 잔 사주세요.</p>
+      <p class="message">일본 의료기관의 공개 정보를 한국어로 정리하는 데 조사가 필요합니다. 토스 계좌나 Buy Me a Coffee로 커피 한 잔을 보내 주시면 정보 확인과 사이트 유지에 쓰입니다. 건강정보나 처방 이력은 받지 않습니다.</p>
       <div class="account" aria-label="계좌 안내">
         <div class="account-row"><span class="account-label">은행</span><span class="account-value">토스뱅크</span></div>
         <div class="account-row"><span class="account-label">계좌번호</span><span class="account-value account-number" id="account-number">1002-0836-8104</span></div>
@@ -1164,7 +1189,7 @@ def site_close():
     {fx_html}
     <a class="meal-side" href="/support.html"><span class="meal-emoji" aria-hidden="true">☕</span><span class="meal-label">커피 한 잔</span></a>
   </div>
-  <script src="/filter.js?v=3"></script>
+  <script src="/filter.js?v=4"></script>
   <script src="/rate.js?v=4"></script>
   <script src="/copy.js"></script>
 </body>
