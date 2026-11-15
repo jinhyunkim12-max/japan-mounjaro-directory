@@ -697,7 +697,7 @@ def head(title, description, path):
   <title>{e(title)}</title>
   <link rel="canonical" href="{e(url)}">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="/styles.css?v=18">
+  <link rel="stylesheet" href="/styles.css?v=20">
   <link rel="sitemap" type="application/xml" href="/sitemap.xml">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="ko_KR">
@@ -726,6 +726,19 @@ DOSE_ROWS = [
     ("15mg", 712610, 675131, 8658),
 ]
 
+# One hospital's announced price, reported by Yicai. Not a national average.
+# dose, CNY for 4 weekly doses. Source checked 2026-11-15.
+CHINA_HOSPITAL_CASES = [
+    ("2.5mg", 324.1),
+    ("5mg", 551.0),
+    ("7.5mg", 751.0),
+    ("10mg", 936.7),
+]
+CHINA_PRICE_SOURCE = "https://www.yicai.com/news/102981605.html"
+CHINA_PRICE_SOURCE_NAME = "제일재경 2025-12-30, 난징 구러우병원 감중대사센터 계정 인용"
+CHINA_PRICE_CHECKED = "2026-11-15"
+CNY_API = "https://api.frankfurter.dev/v1/latest?from=CNY&to=KRW"
+
 
 def fetch_fx():
     try:
@@ -747,16 +760,46 @@ def fx_once():
     return _FX_CACHE
 
 
-def fx_tab(per_jpy, fx_date):
-    if per_jpy and fx_date:
-        value = f"{per_jpy * 100:,.2f}원"
+def fetch_cny():
+    try:
+        request = Request(CNY_API, headers={"User-Agent": "japan-mounjaro-directory"})
+        with urlopen(request, timeout=8) as response:
+            data = json.load(response)
+        return float(data["rates"]["KRW"]), data["date"]
+    except Exception:
+        return 200.41, "2026-11-13"
+
+
+_CNY_CACHE = None
+
+
+def cny_once():
+    global _CNY_CACHE
+    if _CNY_CACHE is None:
+        _CNY_CACHE = fetch_cny()
+    return _CNY_CACHE
+
+
+def fx_tab(rate, fx_date, base="JPY"):
+    if base == "CNY":
+        unit = 1
+        unit_label = "1위안"
+        href = "/china/#prices"
+        title = "1위안 기준 유럽중앙은행 고시. 카드사나 의료기관 청구 환율이 아닙니다. 주말과 공휴일은 직전 영업일입니다."
+    else:
+        unit = 100
+        unit_label = "100엔"
+        href = "/guides/cost/#prices"
+        title = "100엔 기준 유럽중앙은행 고시. 카드사나 의료기관 청구 환율이 아닙니다. 주말과 공휴일은 직전 영업일입니다."
+    if rate and fx_date:
+        value = f"{rate * unit:,.2f}원"
         date_text = fx_date.replace("-", ".")
     else:
         value = "확인 중"
         date_text = ""
-    return f"""<a class="fx-side" href="/guides/cost/#prices" title="100엔 기준 유럽중앙은행 고시. 카드사나 의료기관 청구 환율이 아닙니다. 주말과 공휴일은 직전 영업일입니다.">
+    return f"""<a class="fx-side" href="{href}" data-fx-base="{base}" data-fx-unit="{unit}" title="{title}">
     <span class="fx-side-kicker">참고 환율</span>
-    <span class="fx-side-unit">100엔</span>
+    <span class="fx-side-unit">{unit_label}</span>
     <strong data-fx-value>{value}</strong>
     <span data-fx-date>{date_text}</span>
   </a>"""
@@ -852,6 +895,7 @@ def build_index():
         </ul>
       </nav>
     </div>
+    <div class="wrap">{country_nav("japan")}</div>
   </header>
   <main id="top">
     <section class="hero" aria-labelledby="page-title">
@@ -1010,7 +1054,7 @@ def build_index():
         <div class="three-cards">
           <article class="info-card"><span class="number">01</span><h3>한국에서 상담 가능한가요?</h3><p>한국어 응대와 한국에 있는 상태의 원격 진료는 다른 조건입니다. HANI CLINIC, FONTANA CLINIC Tenjin, 세타가야 Mirai Medical Clinic의 공식 페이지는 한국에 있을 때의 상담을 안내하고, MIL CLINIC OSAKA는 출발 전 상담을 안내합니다. Japan Net Clinic은 한국어 진료를 안내하지만, 확인된 답변은 일본 체류 중 진료입니다. 그 문장은 해당 카드와 한국어 진료 메뉴에 옮겼습니다.</p></article>
           <article class="info-card"><span class="number">02</span><h3>처방을 받을 수 있나요?</h3><p>보장되지 않습니다. 의사는 온라인 진료가 적절하지 않다고 판단하면 진료를 중단하거나 대면 진료를 안내할 수 있고, 처방하지 않을 수도 있습니다.</p></article>
-          <article class="info-card"><span class="number">03</span><h3>한국으로 보내도 되나요?</h3><p>우편이나 특송으로 받는 직접구매는 허용되지 않습니다. 식약처·관세청은 2026년 11월 12일부터 해외에서 정상적으로 처방·구매한 자가 치료용 의약품을 본인이 휴대 반입하는 경우만 수량 한도 안에서 허용한다고 밝혔습니다. <a href="https://www.yna.co.kr/view/AKR20261111158151017" target="_blank" rel="noopener noreferrer">연합뉴스 보도</a> · <a href="https://www.mfds.go.kr/brd/m_99/view.do?seq=50487" target="_blank" rel="noopener noreferrer">식약처 보도자료</a></p></article>
+          <article class="info-card"><span class="number">03</span><h3>한국으로 보내도 되나요?</h3><p>일본 안에서 숙소나 영업소로 보내는 배송과, 한국으로 들이는 일은 다릅니다. 우편이나 특송으로 받는 직접구매는 허용되지 않습니다. 식약처·관세청은 2026년 11월 12일부터 해외에서 정상적으로 처방·구매한 자가 치료용 의약품을 본인이 휴대 반입하는 경우만 수량 한도 안에서 허용한다고 밝혔습니다. <a href="/guides/prescription/">처방 주의사항</a> · <a href="https://www.yna.co.kr/view/AKR20261111158151017" target="_blank" rel="noopener noreferrer">연합뉴스 보도</a></p></article>
         </div>
         <div class="safety">
           <p class="section-kicker">의약품 안전 안내</p>
@@ -1055,7 +1099,7 @@ def build_index():
     <a class="meal-side" href="/support.html"><span class="meal-emoji" aria-hidden="true">☕</span><span class="meal-label">커피 한 잔</span></a>
   </div>
   <script src="/filter.js?v=4"></script>
-  <script src="/rate.js?v=4"></script>
+  <script src="/rate.js?v=5"></script>
   <script src="/copy.js"></script>
 </body>
 </html>
@@ -1117,7 +1161,7 @@ def build_404():
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex">
   <title>페이지를 찾을 수 없습니다 | 마운자로 원정대</title>
-  <link rel="stylesheet" href="/styles.css?v=18">
+  <link rel="stylesheet" href="/styles.css?v=20">
 </head>
 <body>
   <main class="missing">
@@ -1148,7 +1192,19 @@ def seo_nav():
     )
 
 
-def site_header():
+def country_nav(current):
+    items = [
+        ("japan", "일본", "/"),
+        ("china", "중국", "/china/"),
+    ]
+    links = []
+    for key, label, href in items:
+        current_attr = ' aria-current="page"' if key == current else ""
+        links.append(f'<a href="{href}"{current_attr}>{label}</a>')
+    return f'<nav class="guide-links country-links" aria-label="국가">{"".join(links)}</nav>'
+
+
+def site_header(country="japan"):
     return f"""<a class="skip" href="#content">본문으로 건너뛰기</a>
   <header class="topbar">
     <div class="wrap nav">
@@ -1164,12 +1220,17 @@ def site_header():
         </ul>
       </nav>
     </div>
+    <div class="wrap">{country_nav(country)}</div>
   </header>"""
 
 
-def site_close():
-    per_jpy, fx_date = fx_once()
-    fx_html = fx_tab(per_jpy, fx_date)
+def site_close(country="japan"):
+    if country == "china":
+        rate, fx_date = cny_once()
+        fx_html = fx_tab(rate, fx_date, base="CNY")
+    else:
+        rate, fx_date = fx_once()
+        fx_html = fx_tab(rate, fx_date)
     return f"""<footer class="site-footer">
     <div class="wrap">
       <section class="legal-cushion" aria-labelledby="legal-cushion-title">
@@ -1190,7 +1251,7 @@ def site_close():
     <a class="meal-side" href="/support.html"><span class="meal-emoji" aria-hidden="true">☕</span><span class="meal-label">커피 한 잔</span></a>
   </div>
   <script src="/filter.js?v=4"></script>
-  <script src="/rate.js?v=4"></script>
+  <script src="/rate.js?v=5"></script>
   <script src="/copy.js"></script>
 </body>
 </html>"""
@@ -1223,7 +1284,7 @@ def crumb_json(items):
     return json.dumps(payload, ensure_ascii=False)
 
 
-def subpage(title, description, path, crumbs, body, extra_json=""):
+def subpage(title, description, path, crumbs, body, extra_json="", country="japan"):
     scripts = f"""  <script type="application/ld+json">
   {crumb_json(crumbs)}
   </script>"""
@@ -1235,14 +1296,14 @@ def subpage(title, description, path, crumbs, body, extra_json=""):
     return f"""{head(title, description, path)}{scripts}
 </head>
 <body>
-  {site_header()}
+  {site_header(country)}
   <main class="guide" id="content">
     <div class="wrap">
       <p class="crumb">{crumb_html(crumbs)}</p>
       {body}
     </div>
   </main>
-  {site_close()}"""
+  {site_close(country)}"""
 
 
 CITY_COPY = {
@@ -1333,8 +1394,13 @@ def build_prescription():
       <h2>공식 안내에서 반복되는 한계</h2>
       <p>일본 후생노동성은 온라인 진료가 모든 환자에게 가능한 것은 아니며, 의사가 처방하지 않을 수 있다고 안내합니다. 의사가 온라인 진료가 적절하지 않다고 보면 진료를 중단하거나 대면 진료를 안내할 수 있습니다.</p>
       <p>마운자로는 처방의약품입니다. 후생노동성은 제2형 당뇨병 치료제가 미용·체중감량 목적으로 쓰일 때 안전성과 유효성이 확인되지 않았다고 경고합니다. 이 사이트는 사용이나 체중감량을 권하지 않습니다.</p>
+      <h2>일본 안에서 받는 것과 한국으로 가져오는 것</h2>
+      <p>일부 일본 의료기관은 온라인 진료 뒤 일본 안의 숙소나 야마토 운수 영업소로 냉장 배송한다고 안내합니다. <a href="https://fontana-clinic.jp/kr-tsushima-mounjaro/" target="_blank" rel="noopener noreferrer">FONTANA CLINIC Tenjin</a> 한국어 페이지는 대마도 숙소나 야마토 영업소도 일본 국내 배송이라고 적습니다. <a href="https://www.sedaily.com/article/20114391" target="_blank" rel="noopener noreferrer">서울경제 2026년 11월 15일</a>도 후쿠오카·도쿄 기관의 이런 안내를 전했습니다. 이 배송은 한국 주소로 보내는 직구가 아닙니다. 수령 방법과 일정은 이 사이트에서 안내하지 않습니다.</p>
+      <p>야마토 운수는 냉장·냉동 택배를 처음 부재 안내를 한 날부터 3일간 영업소에 보관하고, 그 기한은 늘릴 수 없다고 적습니다. 6일 보관이라는 설명은 이 안내와 다릅니다. <a href="https://faq.kuronekoyamato.co.jp/app/answers/detail/a_id/8989" target="_blank" rel="noopener noreferrer">야마토 운수 냉장 택배 보관 안내</a></p>
+      <p>도쿄 실크 클리닉 공식 가격표의 온라인 5mg는 2–5개월 처방 때 4개에 14,980엔이고, 진료비와 일반 배송비가 포함된다고 적습니다. 3개월분은 44,940엔입니다. 2026년 11월 13일 참고 환율이면 약 37만 5천원입니다. 오키나와·낙도 추가 배송비는 별도라고만 적혀 있고, 1,000엔이라는 금액은 그 가격표에 없습니다. 교통비도 빠졌습니다. 커뮤니티 글의 영수증은 확인하지 않았습니다. <a href="https://tokyosilkclinic.com/menu/909/" target="_blank" rel="noopener noreferrer">도쿄 실크 클리닉 가격표</a></p>
+      <p>일본 후생노동성 장관은 2026년 10월 9일, 외국인 여행객이 귀국 뒤에 쓰도록 긴 기간의 약을 처방하는 것은 환자 안전 면에서도 적절하지 않다고 말했습니다. <a href="https://news.ntv.co.jp/category/society/5dffc0c9ab694c6bbebcce7d71a0057b" target="_blank" rel="noopener noreferrer">닛테레 뉴스 2026년 10월 9일</a></p>
       <h2>한국으로의 반입</h2>
-      <p>식품의약품안전처와 관세청은 우편·특송으로 받는 직접구매를 허용하지 않는다고 밝혔습니다. 2026년 11월 12일부터 허용한다고 밝힌 범위는, 해외에서 정상적으로 처방·구매한 자가 치료용 의약품을 본인이 휴대 반입하는 경우입니다. 모든 반입이 허용된다는 뜻이 아닙니다.</p>
+      <p>식품의약품안전처와 관세청은 우편·특송으로 받는 직접구매를 허용하지 않는다고 밝혔습니다. 2026년 11월 12일부터 허용한다고 밝힌 범위는, 해외에서 정상적으로 처방·구매한 자가 치료용 의약품을 본인이 휴대 반입하는 경우입니다. 주 1회 주사제는 보도 기준으로 3개월분인 12개까지입니다. 모든 반입이 허용된다는 뜻이 아니고, 일본 국내 배송이 됐다는 사실만으로 한국 반입이 확인되는 것도 아닙니다.</p>
       <p><a href="https://www.mhlw.go.jp/stf/newpage_38226.html" target="_blank" rel="noopener noreferrer">후생노동성 온라인 진료 안내</a> · <a href="https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/iyakuhin/kojinyunyu/index_00003.html" target="_blank" rel="noopener noreferrer">후생노동성 안전 안내</a> · <a href="https://www.yna.co.kr/view/AKR20261111158151017" target="_blank" rel="noopener noreferrer">연합뉴스</a> · <a href="https://www.mfds.go.kr/brd/m_99/view.do?seq=50487" target="_blank" rel="noopener noreferrer">식약처 보도자료</a></p>
       <p><a href="/guides/korea-stay/">한국 체류 중 상담이 안내된 기관</a>과 <a href="/guides/cost/">비용 확인 시 주의점</a>은 별도 페이지에 두었습니다.</p>"""
     return subpage(
@@ -1398,13 +1464,151 @@ def build_cost():
       {price_section(per_jpy, expanded=True)}
       <h2>이 표로 알 수 없는 것</h2>
       <p>일본 칸은 자유진료 병원의 청구 평균이 아닙니다. 후생노동성 보험 약가입니다. 체중 감량 목적의 자유진료비는 기관마다 따로 정하므로, 도시별 카드의 공식 페이지에서 현재 안내를 확인해야 합니다. 진료비, 검사비, 환전 수수료는 표에 더하지 않았습니다.</p>
-      <p>오른쪽 환율 칸은 유럽중앙은행 고시이며, 카드사나 의료기관 청구 환율이 아닙니다. <a href="/guides/prescription/">반입과 처방 주의사항</a>도 함께 보세요.</p>"""
+      <p>오른쪽 환율 칸은 유럽중앙은행 고시이며, 카드사나 의료기관 청구 환율이 아닙니다. <a href="/guides/prescription/">반입과 처방 주의사항</a>도 함께 보세요.</p>
+      <p>중국에서 확인된 병원 공개 가격 사례는 이 표와 가격 유형이 다릅니다. <a href="/china/">중국 마운자로 가격</a>에서 같은 용량만 나눠 적었습니다.</p>"""
     return subpage(
         f"일본 마운자로 가격 추산 | {SITE_NAME}",
         "일본 마운자로 용량별 한국 약국 수집 평균, 공급가, 일본 공적 약가를 비교한 추산입니다. 병원 청구액이나 카드 환율이 아닙니다.",
         "/guides/cost/",
         [("마운자로 원정대", "/"), ("비용 확인", "/guides/cost/")],
         body,
+    )
+
+
+def money_row(cells):
+    parts = []
+    for index, cell in enumerate(cells):
+        attrs = ""
+        if isinstance(cell, tuple):
+            cell, attrs = cell
+        tag = "th" if index == 0 else "td"
+        scope = ' scope="row"' if index == 0 else ""
+        parts.append(f"<{tag}{scope}{attrs}>{cell}</{tag}>")
+    return "<tr>" + "".join(parts) + "</tr>"
+
+
+def build_china():
+    per_cny, cny_date = cny_once()
+    per_jpy, jpy_date = fx_once()
+    cny_label = cny_date or "확인 중"
+    jpy_label = jpy_date or "확인 중"
+    korea_rows = []
+    japan_rows = []
+    china_rows = []
+    korea_by_dose = {dose: average for dose, average, _supply, _kit in DOSE_ROWS}
+    japan_by_dose = {dose: kit * 4 for dose, _average, _supply, kit in DOSE_ROWS}
+    for dose, cny in CHINA_HOSPITAL_CASES:
+        won = f"{round(cny * per_cny):,}원" if per_cny else "시세 확인 중"
+        china_rows.append(money_row([
+            "중국",
+            "穆峰达",
+            dose,
+            f"{cny:g}위안",
+            (won, f' data-cny="{cny}"'),
+            "의료기관 공개 가격 사례",
+            cny_label,
+            CHINA_PRICE_CHECKED,
+        ]))
+        korea_rows.append(money_row([
+            "한국",
+            "마운자로",
+            dose,
+            f"{korea_by_dose[dose]:,}원",
+            f"{korea_by_dose[dose]:,}원",
+            "약국 판매가 참고",
+            "2026-11-12",
+            "2026-11-12",
+        ]))
+        yen = japan_by_dose[dose]
+        yen_won = f"{round(yen * per_jpy):,}원" if per_jpy else "시세 확인 중"
+        japan_rows.append(money_row([
+            "일본",
+            "マンジャロ",
+            dose,
+            f"{yen:,}엔",
+            yen_won,
+            "보험 약가 · 자유진료비 아님",
+            jpy_label,
+            "2026-08-01",
+        ]))
+    body = f"""<div class="hero-brand">
+        <div class="mascot-frame">
+          <img src="/china-mascot.jpg" alt="검은 모자와 붉은 저고리를 입고 짜장면 그릇과 보라색 뚜껑 펜을 든 캐릭터">
+        </div>
+        <div>
+          <p class="eyebrow">중국 공개 자료</p>
+          <h1>중국 마운자로 가격 및 의료기관 정보</h1>
+        </div>
+      </div>
+      <p>중국에서는 티르제파타이드 성분의 마운자로가 무펑다(穆峰达)라는 상품명으로 유통됩니다. 일부 의료기관이 공개한 가격은 한국 약국 판매가 참고보다 낮은 금액이 있습니다. 의료기관, 보험 적용, 처방 조건, 유통 경로에 따라 환자가 내는 돈은 달라질 수 있습니다. 아래 중국 금액은 한 병원이 알린 사례이고, 중국 전체의 공식 가격이나 평균이 아닙니다.</p>
+      <h2>제품</h2>
+      <div class="price-wrap">
+        <table class="price-table spec-table">
+          <caption class="sr-only">중국 무펑다 제품 정보</caption>
+          <tbody>
+            <tr><th scope="row">국가</th><td>중국</td></tr>
+            <tr><th scope="row">현지 상품명</th><td>穆峰达(무펑다)</td></tr>
+            <tr><th scope="row">성분명</th><td>티르제파타이드(Tirzepatide)</td></tr>
+            <tr><th scope="row">출시 발표</th><td>릴리중국(礼来中国). 국가약품감독관리국 허가</td></tr>
+            <tr><th scope="row">제품 유형</th><td>주사형 전문의약품</td></tr>
+            <tr><th scope="row">중국 출시 규격</th><td>2.5mg, 5mg, 7.5mg, 10mg. 각 0.5ml</td></tr>
+            <tr><th scope="row">투여 주기</th><td>주 1회. 처방과 증량은 의료진 안내</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>2024년 5월에는 식이·운동과 함께 메트포르민 또는 설포닐우레아로도 혈당이 조절되지 않는 성인 2형 당뇨병, 2024년 7월에는 일정 체질량지수 성인의 장기 체중 관리로 허가되었다는 발표가 있습니다. 제조 공장의 상호는 이 페이지에서 확정하지 않았습니다.</p>
+      <h2 id="prices">같은 용량의 가격 사례</h2>
+      <p class="price-lead">국가별 가격은 의료기관, 처방 조건, 보험 적용 여부 및 판매 경로에 따라 달라질 수 있습니다. 일부 가격은 특정 의료기관 또는 판매 채널의 공개 사례이며 해당 국가의 평균 가격을 의미하지 않습니다.</p>
+      <p>아래 세 표는 주 1회 × 4회분입니다. 가격 유형이 달라 한 줄로 순위를 매기지 않습니다. 12.5mg와 15mg는 중국 출시 규격 발표에서 확인하지 못해 이 비교에 넣지 않았습니다.</p>
+      <h3>한국 · 약국 판매가 참고</h3>
+      <div class="price-wrap">
+        <table class="price-table">
+          <caption class="sr-only">한국 약국 판매가 참고</caption>
+          <thead><tr><th scope="col">국가</th><th scope="col">상품명</th><th scope="col">용량</th><th scope="col">4회분</th><th scope="col">원화</th><th scope="col">가격 유형</th><th scope="col">환율 기준일</th><th scope="col">확인일</th></tr></thead>
+          <tbody>{''.join(korea_rows)}</tbody>
+        </table>
+      </div>
+      <h3>일본 · 보험 약가</h3>
+      <div class="price-wrap">
+        <table class="price-table">
+          <caption class="sr-only">일본 보험 약가</caption>
+          <thead><tr><th scope="col">국가</th><th scope="col">상품명</th><th scope="col">용량</th><th scope="col">4회분</th><th scope="col">원화 추산</th><th scope="col">가격 유형</th><th scope="col">환율 기준일</th><th scope="col">약가 적용일</th></tr></thead>
+          <tbody>{''.join(japan_rows)}</tbody>
+        </table>
+      </div>
+      <h3>중국 · 한 의료기관의 공개 가격</h3>
+      <div class="price-wrap">
+        <table class="price-table">
+          <caption class="sr-only">중국 의료기관 공개 가격 사례</caption>
+          <thead><tr><th scope="col">국가</th><th scope="col">상품명</th><th scope="col">용량</th><th scope="col">4회분</th><th scope="col">원화 추산</th><th scope="col">가격 유형</th><th scope="col">환율 기준일</th><th scope="col">기사 확인일</th></tr></thead>
+          <tbody>{''.join(china_rows)}</tbody>
+        </table>
+      </div>
+      <ul class="price-notes">
+        <li>중국 금액은 <a href="{CHINA_PRICE_SOURCE}" target="_blank" rel="noopener noreferrer">{CHINA_PRICE_SOURCE_NAME}</a>입니다. 난징 구러우병원이 2026년 1월 1일부터 2.5mg 4회 324.1위안, 5mg 4회 551위안, 7.5mg 4회 751위안, 10mg 4회 936.7위안이라고 알렸다는 보도입니다. 상태: 병원 공식 가격표는 재확인 전. 전국 평균이 아니고, 보험 적용 뒤 환자 본인부담액은 이 기사에서 확인되지 않았습니다.</li>
+        <li>원화는 1위안 {per_cny:.2f}원, 기준일 {cny_label}입니다. 유럽중앙은행 고시이고 카드사 환율이 아닙니다.</li>
+        <li>한국 금액은 <a href="https://my-doctor.io/medical-cost/%EB%A7%88%EC%9A%B4%EC%9E%90%EB%A1%9C" target="_blank" rel="noopener noreferrer">나만의닥터</a>가 2026년 11월 12일에 모은 약국 판매가입니다. 진료비는 빠졌습니다.</li>
+        <li>일본 금액은 <a href="https://www.mhlw.go.jp/content/10808000/001699504.pdf" target="_blank" rel="noopener noreferrer">후생노동성</a> 보험 약가를 4회로 둔 값입니다. 자유진료 병원 청구액이 아닙니다. 원화는 1엔 {per_jpy or 0:.4f}원, 기준일 {jpy_label}입니다.</li>
+        <li>온라인 판매 게시 가격은 정식 유통과 판매 적법성을 확인하지 못해 표에 넣지 않았습니다. 산둥성 린이시의 324.12위안 사례도 그 병원 문서로 확인하지 못했습니다.</li>
+      </ul>
+      <h2>의료기관</h2>
+      <p>공식 홈페이지에서 주소, 마운자로 또는 무펑다 처방 안내, 언어 지원을 확인한 의료기관은 아직 없습니다. 가격 보도에 이름이 나온 병원도, 그 병원 페이지를 보기 전에는 목록에 넣지 않습니다.</p>
+      <h2>처방과 반입</h2>
+      <p>무펑다는 의사의 진료와 처방이 필요한 전문의약품입니다. 건강 상태에 따라 적합성과 부작용 위험은 다릅니다. 이 사이트는 의약품을 판매하거나 구매·배송을 중개하지 않습니다. 의료기관과 가격은 참고이며 진료나 처방을 보장하지 않습니다.</p>
+      <p>해외에서 처방·구매한 의약품을 국내로 들이는 데는 별도의 규정이 적용됩니다. 2026년 11월 12일부터 식품의약품안전처와 관세청은 정상 처방·구매한 자가치료용 의약품의 개인 휴대를 안내했습니다. 우편·특송 직접구매는 그 허용에 포함되지 않습니다. 현재 기준은 <a href="https://www.mfds.go.kr/brd/m_99/view.do?seq=50487" target="_blank" rel="noopener noreferrer">식약처 보도자료</a>와 <a href="https://www.yna.co.kr/view/AKR20261111158151017" target="_blank" rel="noopener noreferrer">연합뉴스</a>에서 확인해야 합니다.</p>
+      <h2>출처</h2>
+      <ul>
+        <li><a href="https://www.news.cn/health/20250103/24c1bbb9d7d648848efcf1189dc0d3fa/c.html" target="_blank" rel="noopener noreferrer">신화망 2025-01-03</a> 릴리중국의 무펑다 중국 출시, 허가 적응증, 2.5·5·7.5·10mg 규격</li>
+        <li><a href="{CHINA_PRICE_SOURCE}" target="_blank" rel="noopener noreferrer">제일재경 2025-12-30</a> 난징 구러우병원 계정의 4회분 가격. 기사 확인일 {CHINA_PRICE_CHECKED}</li>
+        <li><a href="/guides/cost/">한국·일본 가격 추산</a>의 출처는 그 페이지에 있습니다.</li>
+      </ul>"""
+    return subpage(
+        "중국 마운자로 가격 및 병원 정보 | 일본 마운자로 디렉터리",
+        "중국 마운자로(무펑다) 가격과 의료기관 정보를 확인하고 한국·일본과 비교해 보세요. 가격 출처와 확인일을 함께 제공합니다.",
+        "/china/",
+        [("마운자로 원정대", "/"), ("중국", "/china/")],
+        body,
+        country="china",
     )
 
 
@@ -1444,6 +1648,7 @@ def main():
         "/guides/korea-stay/": build_korea_stay(),
         "/guides/korean-care/": build_korean_care(),
         "/guides/cost/": build_cost(),
+        "/china/": build_china(),
     }
     for city_id, _name, _en in CITIES:
         pages[f"/{city_id}/"] = build_city(city_id)
@@ -1467,7 +1672,7 @@ def main():
     url_xml = "\n".join(
         f"""  <url>
     <loc>{SITE_URL}{path}</loc>
-    <lastmod>2026-11-13</lastmod>
+    <lastmod>{"2026-11-15" if path == "/china/" else "2026-11-13"}</lastmod>
   </url>"""
         for path in urls
     )

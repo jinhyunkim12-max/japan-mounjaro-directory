@@ -1,18 +1,20 @@
 (function () {
   var value = document.querySelector("[data-fx-value]");
   var date = document.querySelector("[data-fx-date]");
-  var estimates = document.querySelectorAll("[data-jpy]");
   var tab = document.querySelector(".fx-side");
   var prices = document.getElementById("prices");
   var details = prices ? prices.querySelector("details") : null;
+  var base = (tab && tab.getAttribute("data-fx-base")) || "JPY";
+  var unit = Number((tab && tab.getAttribute("data-fx-unit")) || (base === "CNY" ? 1 : 100));
+  var estimates = document.querySelectorAll(base === "CNY" ? "[data-cny]" : "[data-jpy]");
 
   function openPrices() {
-    if (!prices || !details) return;
-    details.open = true;
+    if (!prices) return;
+    if (details) details.open = true;
     prices.scrollIntoView({ block: "start" });
   }
 
-  if (tab && details) {
+  if (tab) {
     tab.addEventListener("click", function (event) {
       var href = tab.getAttribute("href") || "";
       if (href.indexOf("#prices") === -1) return;
@@ -30,9 +32,9 @@
     return Math.round(amount).toLocaleString("ko-KR") + "원";
   }
 
-  function show(perJpy, isoDate) {
-    if (value) {
-      value.textContent = (perJpy * 100).toLocaleString("ko-KR", {
+  function show(perUnit, isoDate) {
+    if (value && isFinite(unit) && unit > 0) {
+      value.textContent = (perUnit * unit).toLocaleString("ko-KR", {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2
       }) + "원";
@@ -41,20 +43,20 @@
       date.textContent = isoDate.replace(/-/g, ".");
     }
     estimates.forEach(function (cell) {
-      var yen = Number(cell.getAttribute("data-jpy"));
-      if (yen) cell.textContent = won(yen * perJpy);
+      var amount = Number(cell.getAttribute(base === "CNY" ? "data-cny" : "data-jpy"));
+      if (amount) cell.textContent = won(amount * perUnit);
     });
   }
 
-  fetch("https://api.frankfurter.dev/v1/latest?from=JPY&to=KRW")
+  fetch("https://api.frankfurter.dev/v1/latest?from=" + encodeURIComponent(base) + "&to=KRW")
     .then(function (response) {
       if (!response.ok) throw new Error("fx");
       return response.json();
     })
     .then(function (data) {
-      var perJpy = Number(data.rates && data.rates.KRW);
-      if (!isFinite(perJpy) || perJpy <= 0) throw new Error("fx");
-      show(perJpy, data.date);
+      var perUnit = Number(data.rates && data.rates.KRW);
+      if (!isFinite(perUnit) || perUnit <= 0) throw new Error("fx");
+      show(perUnit, data.date);
     })
     .catch(function () {
       if (value && value.textContent.indexOf("원") === -1) {
