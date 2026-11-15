@@ -1408,3 +1408,7 @@ h1, h2, h3, h4 { letter-spacing: -0.04em; }
   .hero-brand { display: block; }
   .mascot-frame { width: 120px; margin-bottom: 10px; }
 }
+
+/* 개발자가 만든 다른 페이지 */
+.more-pages { margin-top: 8px !important; font-weight: 600; }
+.more-pages a { text-decoration: underline; text-underline-offset: 3px; }
