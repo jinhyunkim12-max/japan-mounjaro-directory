@@ -1436,6 +1436,60 @@ h1, h2, h3, h4 { letter-spacing: -0.04em; }
 
 .fold[open] > summary { background: #ffe500; }
 
+summary { list-style: none; }
+
+summary::-webkit-details-marker { display: none; }
+
+.fold > summary,
+.card-more > summary,
+.line-guide > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.city-folder > summary span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.fold > summary::after,
+.card-more > summary::after,
+.line-guide > summary::after,
+.city-folder > summary span::after {
+  content: "▽ 펼치기";
+  flex: 0 0 auto;
+  padding: 6px 10px;
+  border: 1px solid #111;
+  background: #ffe500;
+  color: #111;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.fold[open] > summary::after,
+.card-more[open] > summary::after,
+.line-guide[open] > summary::after,
+.city-folder[open] > summary span::after {
+  content: "△ 접기";
+  background: #fff;
+}
+
+.fold > summary:hover::after,
+.card-more > summary:hover::after,
+.line-guide > summary:hover::after,
+.city-folder > summary:hover span::after {
+  background: #111;
+  color: #fff;
+}
+
+.card-more > summary,
+.line-guide > summary { color: #111; }
+
 @media (max-width: 860px) {
   .hero-brand { display: block; }
   .mascot-frame { width: 120px; margin-bottom: 10px; }

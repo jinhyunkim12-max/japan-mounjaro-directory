@@ -702,7 +702,7 @@ def head(title, description, path):
   <title>{e(title)}</title>
   <link rel="canonical" href="{e(url)}">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="/styles.css?v=20">
+  <link rel="stylesheet" href="/styles.css?v=21">
   <link rel="sitemap" type="application/xml" href="/sitemap.xml">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="ko_KR">
@@ -1219,7 +1219,7 @@ def build_404():
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex">
   <title>페이지를 찾을 수 없습니다 | 마운자로 원정대</title>
-  <link rel="stylesheet" href="/styles.css?v=20">
+  <link rel="stylesheet" href="/styles.css?v=21">
 </head>
 <body>
   <main class="missing">
