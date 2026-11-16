@@ -850,13 +850,66 @@ def price_section(per_jpy, expanded=False):
         </details>
       </div>
     </section>"""
+
+
+def clinic_pack_section(per_jpy):
+    rows = [
+        ("Nihonbashi Clinic", "2.5mg", 24000, "세금 포함. 약을 살 때 진료비와 표준 배송비 포함", "2026-11-16", "https://www.nihonbashiclinic.jp/en/mounjaro/"),
+        ("Nihonbashi Clinic", "5mg", 38000, "세금 포함. 약을 살 때 진료비와 표준 배송비 포함", "2026-11-16", "https://www.nihonbashiclinic.jp/en/mounjaro/"),
+        ("Shinbashi Ginza Swift Clinic", "2.5mg", 29800, "세금 포함 약값. 냉장 배송 1,050엔과 진료비는 별도", "2026-10-08", "https://www.swift-clinic.com/en/online/mounjaro"),
+        ("Shinbashi Ginza Swift Clinic", "5mg", 49800, "세금 포함 약값. 냉장 배송 1,050엔과 진료비는 별도", "2026-10-08", "https://www.swift-clinic.com/en/online/mounjaro"),
+    ]
+    body = []
+    for name, dose, yen, scope, checked, url in rows:
+        won = f"{round(yen * per_jpy):,}원" if per_jpy else "시세 확인 중"
+        body.append(
+            "<tr>"
+            f'<th scope="row"><a href="{url}" target="_blank" rel="noopener noreferrer">{name}</a></th>'
+            f"<td>{dose}</td>"
+            f"<td>{yen:,}엔</td>"
+            f'<td data-jpy="{yen}">{won}</td>'
+            f"<td>{scope}</td>"
+            f"<td>{checked}</td>"
+            "</tr>"
+        )
+    return f"""<section id="clinic-prices">
+      <div class="wrap">
+        <details class="fold">
+          <summary>공식 페이지에 적힌 4개 가격</summary>
+          <p class="price-lead">주 1회 4회분입니다. 싼 순서나 추천이 아니고, 보험 약가도 아닙니다. 의료기관 페이지에 4개 금액이 문장으로 있는 곳만 적었습니다. 다른 사이트의 최저가 목록은 가져오지 않았습니다.</p>
+          <div class="price-wrap">
+            <table class="price-table">
+              <caption class="sr-only">공식 페이지의 마운자로 4개 가격</caption>
+              <thead>
+                <tr>
+                  <th scope="col">기관</th>
+                  <th scope="col">용량</th>
+                  <th scope="col">4개 가격</th>
+                  <th scope="col">원화 추산</th>
+                  <th scope="col">포함된 것</th>
+                  <th scope="col">확인일</th>
+                </tr>
+              </thead>
+              <tbody>
+                {''.join(body)}
+              </tbody>
+            </table>
+          </div>
+          <ul class="price-notes">
+            <li>니혼바시 1개만 주문하면 취급료 2,000엔이 따로 붙고, 진료만 하고 약을 사지 않으면 진료비 3,000엔이 있다고 적혀 있습니다. 체중 관리 목적 사용은 일본 허가 밖이라고 적혀 있습니다.</li>
+            <li>스위프트는 약값과 배송비를 더해도 최종 결제액이 아니라고 적습니다. 페이지의 정보 기준일은 2026년 10월 8일입니다.</li>
+            <li>Drip Medical 영문 페이지는 “From ¥2,380”만 있고 4개 가격인지 확인되지 않아 넣지 않았습니다. Tokyo Online Clinic 본문에서는 4개 가격 문장을 찾지 못했습니다.</li>
+          </ul>
+        </details>
+      </div>
+    </section>"""
 SUPPORT_DESC = "이 안내가 도움이 되셨다면 개발자에게 커피 한 잔 사주세요."
 
 
 def build_index():
     per_jpy, fx_date = fx_once()
     fx_html = fx_tab(per_jpy, fx_date)
-    price_html = price_section(per_jpy)
+    price_html = price_section(per_jpy) + clinic_pack_section(per_jpy)
     nav, sections = directory()
     chips = ['<button class="chip" type="button" data-city-filter="all" aria-pressed="true">전체</button>']
     for city_id, name, _en in CITIES:
