@@ -218,6 +218,7 @@ CLINICS = [
         "jp": "ミライメディカルクリニック",
         "area": "하카타구",
         "address": "〒812-0027 福岡県福岡市博多区下川端町3-1 博多リバレイン1F",
+        "map_query": "ミライメディカルクリニック 博多リバレイン",
         "summary": "공식 온라인 다이어트 안내에 마운자로 진료와 온라인 예약 경로가 있습니다. 의사 진료를 거치며 상담 결과에 따라 처방되지 않을 수 있습니다. 한국 거주자의 원격상담 가능 여부는 이 기관의 공식 안내에서 확인되지 않았습니다. 도쿄 세타가야의 Mirai Medical Clinic Setagaya와는 다른 기관입니다.",
         "phone": "+81-92-707-1111",
         "tel": "+81927071111",
@@ -387,6 +388,7 @@ CLINICS = [
         "jp": "大美会クリニック 京都烏丸院",
         "area": "시모교구",
         "address": "〒600-8006 京都市下京区四条通柳馬場西入 立売中之町92 AOKIビル6F",
+        "map_query": "大美会クリニック 京都烏丸院",
         "summary": "공식 마운자로 페이지는 온라인 상담 흐름을 안내하고, 예약 시스템에는 마운자로 상담용 온라인 다이어트 외래가 있습니다. 처방은 상담 후 의료진이 판단합니다.",
         "phone": "0120-373-889 (일본 국내 무료전화)",
         "tel": "0120373889",
@@ -404,7 +406,8 @@ CLINICS = [
         "name": "HANI CLINIC",
         "jp": "HANI CLINIC（運営: 株式会社メドマルジェ）",
         "area": "이치카와시",
-        "address": "〒272-0826 千葉県市川市真間3-5-19（소개 페이지에 적힌 운영 법인 소재지）",
+        "address": "〒272-0826 千葉県市川市真間3-5-19（소개 페이지에 적힌 운영 법인 소재지. 방문하는 진료실로 확인된 주소는 아닙니다）",
+        "map_query": "千葉県市川市真間3丁目5番19号",
         "summary": "공식 한국어 소개는 한국에 있을 때와 일본에 체류할 때 모두 일본 현지 의사의 온라인 진료를 받을 수 있다고 적습니다. 처방 여부는 의사가 판단합니다.",
         "phone": "공식 페이지에서 전화번호를 확인하지 못했습니다. 특정상거래법 표기는 요청 시 공개한다고 적습니다.",
         "email": "info@hani-clinic.com",
@@ -424,6 +427,7 @@ CLINICS = [
         "jp": "폰타나클리닉 텐진",
         "area": "주오구",
         "address": "〒810-0021 福岡県福岡市中央区今泉1-18-23 CASA FONTANA 2F",
+        "map_query": "FONTANA CLINIC 福岡市中央区今泉1-18-23",
         "summary": "공식 한국어 페이지는 한국어 대응 스태프가 매일 있고, 한국에 있는 동안 온라인 진료를 예약할 수 있다고 적습니다. 직원의 국적은 확인되지 않았습니다. 처방 여부는 의사가 판단합니다.",
         "phone": "공식 한국어 페이지에서 전화번호를 확인하지 못했습니다.",
         "email": "공식 한국어 페이지에서 이메일 주소를 확인하지 못했습니다.",
@@ -468,8 +472,9 @@ def ext(url, label, cls):
     )
 
 
-def map_url(address):
-    return "https://www.google.com/maps/search/?api=1&query=" + quote(address)
+def map_url(clinic):
+    query = clinic.get("map_query") or clinic["address"]
+    return "https://www.google.com/maps/search/?api=1&query=" + quote(query)
 
 
 def phone_html(clinic):
@@ -533,7 +538,7 @@ def line_details():
 
 
 CHECKED = {
-    "HANI CLINIC": "2026-11-12",
+    "HANI CLINIC": "2026-11-16",
     "FONTANA CLINIC Tenjin": "2026-11-12",
     "MIL CLINIC OSAKA": "2026-11-12",
     "Mirai Medical Clinic Setagaya": "2026-11-12",
@@ -642,7 +647,7 @@ def card(clinic):
             </dl>
             <div class="pill-row">{pills}{actions}</div>
             {line}
-            <div class="card-foot">{ext(map_url(clinic["address"]), "지도에서 위치 보기", "map-link")}</div>
+            <div class="card-foot">{ext(map_url(clinic), "지도에서 위치 보기", "map-link")}</div>
           </details>
         </article>"""
 
@@ -676,7 +681,7 @@ def map_section():
         rows = []
         for clinic in group:
             rows.append(
-                f"""<div class="map-row"><div><strong>{e(clinic['name'])}</strong><span>{e(clinic['address'])}</span></div>{ext(map_url(clinic['address']), "지도에서 위치 보기", "map-link")}</div>"""
+                f"""<div class="map-row"><div><strong>{e(clinic['name'])}</strong><span>{e(clinic['address'])}</span></div>{ext(map_url(clinic), "지도에서 위치 보기", "map-link")}</div>"""
             )
         boxes.append(
             f'<section class="map-city" aria-label="{e(name)} 주소"><h3>{name} · {len(group)}곳</h3>{"".join(rows)}</section>'
@@ -1669,7 +1674,7 @@ def build_about():
     body = """<h1>정보 수집 기준과 수정</h1>
       <p>마운자로 원정대는 일본 의료기관이 공개한 마운자로 상담 정보와 연락처를 한국어로 모은 독립 안내입니다. 의료기관이 아니고, 특정 기관과 제휴하거나 진료·예약·결제를 대신하지 않습니다. 운영자의 실명과 자격은 이 페이지에 적지 않습니다.</p>
       <h2>무엇을 기준으로 적나</h2>
-      <p>기관 카드의 주소, 연락처, 운영시간, 상담 조건은 각 기관 공식 페이지의 문장을 확인한 범위만 적습니다. 카드마다 확인일이 있습니다. 처음 18곳은 2026년 11월 11일, HANI CLINIC·FONTANA·MIL·세타가야 Mirai·Japan Net Clinic은 2026년 11월 12일입니다.</p>
+      <p>기관 카드의 주소, 연락처, 운영시간, 상담 조건은 각 기관 공식 페이지의 문장을 확인한 범위만 적습니다. 카드마다 확인일이 있습니다. 처음 18곳은 2026년 11월 11일, FONTANA·MIL·세타가야 Mirai·Japan Net Clinic은 2026년 11월 12일입니다. HANI CLINIC 주소는 2026년 11월 16일에 다시 확인했습니다.</p>
       <p>공식 페이지에 없는 가격, 순위, 추천, 처방 성공률은 만들지 않습니다. 비용 페이지의 금액은 약가와 보도된 공급가, 가격 비교 서비스의 수집 평균을 출처와 함께 둔 추산입니다.</p>
       <h2>틀린 내용</h2>
       <p>바뀌었거나 틀린 곳은 <a href="mailto:moonblind@daum.net">moonblind@daum.net</a>으로 알려 주면 공식 페이지를 다시 보고 고칩니다. 제보가 곧 그 내용이 맞다는 확인은 아닙니다.</p>
