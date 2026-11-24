@@ -1148,7 +1148,7 @@ def build_index():
       <div class="footer-inner">
         <p>독립 정보 안내 · 의료기관과 비제휴 · 광고 없음 · 법적 분류는 확정되지 않음</p>
         <p><a href="/support.html"><span class="meal-emoji" aria-hidden="true">☕</span> 개발자에게 커피 한 잔</a> · 공식 자료 확인 기준: 2026년 11월 11일 · 의료 조언이 아닙니다.</p>
-        <p class="more-pages">개발자가 만든 다른 페이지 · <a href="https://korea-chaebol-map.netlify.app/" target="_blank" rel="noopener">CHAEBOL ARCHIVE · 재계 혼맥·돈맥·학맥 지도 ↗</a></p>
+        <p class="more-pages">개발자가 만든 다른 페이지 · <a href="https://korea-chaebol-map.netlify.app/" target="_blank" rel="noopener">CHAEBOL ARCHIVE · 재계 혼맥·돈맥·학맥 지도 ↗</a> · <a href="https://kleague-money-tracker.possible-blackbird.workers.dev/" target="_blank" rel="noopener">공공돈으로 보는 K리그 ↗</a></p>
       </div>
     </div>
   </footer>
@@ -1201,7 +1201,7 @@ def build_support():
       </section>
       <p class="tip-line"><span aria-hidden="true">📬</span> <strong>제보</strong> 틀린 곳이나 바뀐 내용이 있으면 알려 주세요. <a href="mailto:moonblind@daum.net">moonblind@daum.net</a></p>
       <p><a href="/">{SITE_NAME}로 돌아가기</a></p>
-      <p class="more-pages">개발자가 만든 다른 페이지 · <a href="https://korea-chaebol-map.netlify.app/" target="_blank" rel="noopener">CHAEBOL ARCHIVE · 재계 혼맥·돈맥·학맥 지도 ↗</a></p>
+      <p class="more-pages">개발자가 만든 다른 페이지 · <a href="https://korea-chaebol-map.netlify.app/" target="_blank" rel="noopener">CHAEBOL ARCHIVE · 재계 혼맥·돈맥·학맥 지도 ↗</a> · <a href="https://kleague-money-tracker.possible-blackbird.workers.dev/" target="_blank" rel="noopener">공공돈으로 보는 K리그 ↗</a></p>
     </div>
   </footer>
   <script src="/copy.js"></script>
@@ -1300,7 +1300,7 @@ def site_close(country="japan"):
       <div class="footer-inner">
         <p>독립 정보 안내 · 의료기관과 비제휴 · 광고 없음 · 법적 분류는 확정되지 않음</p>
         <p><a href="/about/">정보 수집 기준</a> · <a href="/support.html"><span class="meal-emoji" aria-hidden="true">☕</span> 개발자에게 커피 한 잔</a> · 의료 조언이 아닙니다.</p>
-        <p class="more-pages">개발자가 만든 다른 페이지 · <a href="https://korea-chaebol-map.netlify.app/" target="_blank" rel="noopener">CHAEBOL ARCHIVE · 재계 혼맥·돈맥·학맥 지도 ↗</a></p>
+        <p class="more-pages">개발자가 만든 다른 페이지 · <a href="https://korea-chaebol-map.netlify.app/" target="_blank" rel="noopener">CHAEBOL ARCHIVE · 재계 혼맥·돈맥·학맥 지도 ↗</a> · <a href="https://kleague-money-tracker.possible-blackbird.workers.dev/" target="_blank" rel="noopener">공공돈으로 보는 K리그 ↗</a></p>
       </div>
     </div>
   </footer>
