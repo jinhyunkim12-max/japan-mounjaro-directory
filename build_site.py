@@ -428,16 +428,19 @@ CLINICS = [
         "area": "주오구",
         "address": "〒810-0021 福岡県福岡市中央区今泉1-18-23 CASA FONTANA 2F",
         "map_query": "FONTANA CLINIC 福岡市中央区今泉1-18-23",
-        "summary": "공식 한국어 페이지는 한국어 대응 스태프가 매일 있고, 한국에 있는 동안 온라인 진료를 예약할 수 있다고 적습니다. 직원의 국적은 확인되지 않았습니다. 처방 여부는 의사가 판단합니다.",
-        "phone": "공식 한국어 페이지에서 전화번호를 확인하지 못했습니다.",
+        "summary": "공식 한국어 페이지는 한국어 대응 스태프가 매일 있고, 한국에 있는 동안 온라인 진료를 예약할 수 있다고 적습니다. 대마도 안내 페이지는 쓰시마 숙소나 야마토 운수 영업소 수령을 일본 국내 배송으로 적습니다. 직원의 국적은 확인되지 않았습니다. 처방 여부는 의사가 판단합니다.",
+        "phone": "092-753-5205",
+        "tel": "+81927535205",
         "email": "공식 한국어 페이지에서 이메일 주소를 확인하지 못했습니다.",
-        "hours": "공식 한국어 페이지에 운영시간이 따로 적혀 있지 않습니다.",
-        "booking": "한국어 상담 경로로 카카오톡 ID fontanaclinic이 안내되어 있습니다.",
-        "korea_consult": "공식 질문 답변은 한국에 체류하는 동안 예약과 온라인 진료가 가능하다고 적습니다. 처방 여부는 의사가 판단합니다.",
+        "hours": "대마도 안내 페이지의 접수 시간: 10:00–19:00.",
+        "booking": "한국어 페이지는 카카오톡 ID fontanaclinic을 안내합니다. 대마도 안내 페이지는 예약을 공식 웹 예약으로 한다고 적고, 한국에 있는 동안의 진료 가능 여부는 예약 전에 확인하라고 적습니다.",
+        "korea_consult": "공식 한국어 페이지는 한국에 체류하는 동안 예약과 온라인 진료가 가능하다고 적습니다. 대마도 안내 페이지는 그 가능 여부를 예약 전에 확인하라고 적습니다. 처방 여부는 의사가 판단합니다.",
         "mounjaro": "https://fontana-clinic.jp/kr/",
         "access": "https://fontana-clinic.jp/kr/",
         "links": [
             ("https://fontana-clinic.jp/kr/", "공식 안내 페이지"),
+            ("https://fontana-clinic.jp/kr-tsushima-mounjaro/", "대마도 수령 안내"),
+            ("https://reservation.medical-force.com/c/93b002d38f2f477280d052a1808de90a", "공식 예약 페이지"),
         ],
     },
     {
@@ -484,6 +487,8 @@ def phone_html(clinic):
         html = f'<a href="tel:{e(tel)}">{e(phone)}</a>'
         if phone.startswith("0120"):
             html += '<span class="mini-note">일본 국내 무료전화 번호로, 해외에서는 연결되지 않을 수 있습니다.</span>'
+        elif phone.startswith("0"):
+            html += '<span class="mini-note">일본 시내 번호입니다. 해외에서는 국가번호가 필요할 수 있습니다.</span>'
         return html
     return e(phone)
 
@@ -539,7 +544,7 @@ def line_details():
 
 CHECKED = {
     "HANI CLINIC": "2026-11-16",
-    "FONTANA CLINIC Tenjin": "2026-11-12",
+    "FONTANA CLINIC Tenjin": "2026-11-18",
     "MIL CLINIC OSAKA": "2026-11-12",
     "Mirai Medical Clinic Setagaya": "2026-11-12",
     "Japan Net Clinic": "2026-11-12",
@@ -863,6 +868,12 @@ def clinic_pack_section(per_jpy):
         ("Nihonbashi Clinic", "5mg", 38000, "세금 포함. 약을 살 때 진료비와 표준 배송비 포함", "2026-11-16", "https://www.nihonbashiclinic.jp/en/mounjaro/"),
         ("Shinbashi Ginza Swift Clinic", "2.5mg", 29800, "세금 포함 약값. 냉장 배송 1,050엔과 진료비는 별도", "2026-10-08", "https://www.swift-clinic.com/en/online/mounjaro"),
         ("Shinbashi Ginza Swift Clinic", "5mg", 49800, "세금 포함 약값. 냉장 배송 1,050엔과 진료비는 별도", "2026-10-08", "https://www.swift-clinic.com/en/online/mounjaro"),
+        ("FONTANA CLINIC Tenjin", "2.5mg", 15800, "세금 포함 약값 4개. 온라인은 배송·처방전 2,500엔이 별도", "2026-11-18", "https://fontana-clinic.jp/kr/"),
+        ("FONTANA CLINIC Tenjin", "5mg", 25400, "세금 포함 약값 4개. 온라인은 배송·처방전 2,500엔이 별도", "2026-11-18", "https://fontana-clinic.jp/kr/"),
+        ("FONTANA CLINIC Tenjin", "7.5mg", 40600, "세금 포함 약값 4개. 온라인은 배송·처방전 2,500엔이 별도", "2026-11-18", "https://fontana-clinic.jp/kr/"),
+        ("FONTANA CLINIC Tenjin", "10mg", 48900, "세금 포함 약값 4개. 온라인은 배송·처방전 2,500엔이 별도", "2026-11-18", "https://fontana-clinic.jp/kr/"),
+        ("FONTANA CLINIC Tenjin", "12.5mg", 60000, "세금 포함 약값 4개. 온라인은 배송·처방전 2,500엔이 별도", "2026-11-18", "https://fontana-clinic.jp/kr/"),
+        ("FONTANA CLINIC Tenjin", "15mg", 68300, "세금 포함 약값 4개. 온라인은 배송·처방전 2,500엔이 별도", "2026-11-18", "https://fontana-clinic.jp/kr/"),
     ]
     body = []
     for name, dose, yen, scope, checked, url in rows:
@@ -904,6 +915,7 @@ def clinic_pack_section(per_jpy):
             <li>니혼바시 1개만 주문하면 취급료 2,000엔이 따로 붙고, 진료만 하고 약을 사지 않으면 진료비 3,000엔이 있다고 적혀 있습니다. 체중 관리 목적 사용은 일본 허가 밖이라고 적혀 있습니다.</li>
             <li>스위프트는 약값과 배송비를 더해도 최종 결제액이 아니라고 적습니다. 페이지의 정보 기준일은 2026년 10월 8일입니다.</li>
             <li>Drip Medical 영문 페이지는 “From ¥2,380”만 있고 4개 가격인지 확인되지 않아 넣지 않았습니다. Tokyo Online Clinic 본문에서는 4개 가격 문장을 찾지 못했습니다.</li>
+            <li>폰타나 한국어 페이지는 1개월분을 4개라고 적습니다. 대마도 안내 페이지는 온라인 결제액이 약값에 2,500엔을 더한 금액이고, 그 2,500엔에 일본 국내 배송비와 일본어·영어 처방전이 포함된다고 적습니다. 초진·재진 진료비는 0엔이라고 적습니다. 3개월·6개월 합계는 그 페이지에 따로 있습니다.</li>
           </ul>
         </details>
       </div>
@@ -1381,7 +1393,7 @@ CITY_COPY = {
     "fukuoka": (
         "후쿠오카의 마운자로 공개 안내 4곳입니다. FONTANA CLINIC Tenjin만 한국 체류 중 상담과 한국어 대응을 안내합니다. 하카타 Mirai는 세타가야 Mirai와 다른 기관입니다.",
         """<p>후쿠오카에서 확인한 기관은 하카타구와 텐진이 있는 주오구에 있습니다.</p>
-        <p>FONTANA CLINIC Tenjin 공식 페이지는 한국어 대응 스태프가 매일 있다고 적습니다. 한국에 머무는 동안의 예약과 온라인 상담을 안내하고, 약은 일본 호텔로 받는다고 적습니다. 직원 국적은 확인되지 않았습니다.</p>
+        <p>FONTANA CLINIC Tenjin 공식 페이지는 한국어 대응 스태프가 매일 있다고 적습니다. 한국에 머무는 동안의 예약과 온라인 상담을 안내하고, 약은 일본 호텔로 받는다고 적습니다. 대마도 안내 페이지는 쓰시마 숙소나 야마토 운수 영업소도 일본 국내 배송이라고 적고, 접수 시간은 10:00–19:00, 전화는 092-753-5205라고 적습니다. 직원 국적은 확인되지 않았습니다.</p>
         <p>하카타의 Mirai Medical Clinic은 miraimedical.com을 쓰는 기관이고, 세타가야의 Mirai Medical Clinic과는 다릅니다. 하카타 Mirai, M Medical Clinic, 클라라 뷰티 클리닉 텐진은 한국 체류 중 상담이 공식 안내에서 확인되지 않았습니다.</p>""",
     ),
     "kyoto": (
@@ -1453,7 +1465,7 @@ def build_prescription():
       <p>일본 후생노동성은 온라인 진료가 모든 환자에게 가능한 것은 아니며, 의사가 처방하지 않을 수 있다고 안내합니다. 의사가 온라인 진료가 적절하지 않다고 보면 진료를 중단하거나 대면 진료를 안내할 수 있습니다.</p>
       <p>마운자로는 처방의약품입니다. 후생노동성은 제2형 당뇨병 치료제가 미용·체중감량 목적으로 쓰일 때 안전성과 유효성이 확인되지 않았다고 경고합니다. 이 사이트는 사용이나 체중감량을 권하지 않습니다.</p>
       <h2>일본 안에서 받는 것과 한국으로 가져오는 것</h2>
-      <p>일부 일본 의료기관은 온라인 진료 뒤 일본 안의 숙소나 야마토 운수 영업소로 냉장 배송한다고 안내합니다. <a href="https://fontana-clinic.jp/kr-tsushima-mounjaro/" target="_blank" rel="noopener noreferrer">FONTANA CLINIC Tenjin</a> 한국어 페이지는 대마도 숙소나 야마토 영업소도 일본 국내 배송이라고 적습니다. <a href="https://www.sedaily.com/article/20114391" target="_blank" rel="noopener noreferrer">서울경제 2026년 11월 15일</a>도 후쿠오카·도쿄 기관의 이런 안내를 전했습니다. 이 배송은 한국 주소로 보내는 직구가 아닙니다. 수령 방법과 일정은 이 사이트에서 안내하지 않습니다.</p>
+      <p>일부 일본 의료기관은 온라인 진료 뒤 일본 안의 숙소나 야마토 운수 영업소로 냉장 배송한다고 안내합니다. <a href="https://fontana-clinic.jp/kr-tsushima-mounjaro/" target="_blank" rel="noopener noreferrer">FONTANA CLINIC Tenjin</a> 한국어 페이지는 대마도 숙소나 야마토 영업소도 일본 국내 배송이라고 적습니다. 같은 페이지는 온라인 결제액을 약값에 2,500엔을 더한 금액으로 적고, 그 2,500엔에 일본 국내 배송비와 일본어·영어 처방전이 포함된다고 적습니다. 클리닉이 최대 6개월분까지 처방할 수 있다고 적은 수량과, 한국으로 가지고 들어올 수 있는 수량은 다르다고도 적습니다. <a href="https://www.sedaily.com/article/20114391" target="_blank" rel="noopener noreferrer">서울경제 2026년 11월 15일</a>도 후쿠오카·도쿄 기관의 이런 안내를 전했습니다. 이 배송은 한국 주소로 보내는 직구가 아닙니다. 수령 방법과 일정은 이 사이트에서 안내하지 않습니다.</p>
       <p>야마토 운수는 냉장·냉동 택배를 처음 부재 안내를 한 날부터 3일간 영업소에 보관하고, 그 기한은 늘릴 수 없다고 적습니다. 6일 보관이라는 설명은 이 안내와 다릅니다. <a href="https://faq.kuronekoyamato.co.jp/app/answers/detail/a_id/8989" target="_blank" rel="noopener noreferrer">야마토 운수 냉장 택배 보관 안내</a></p>
       <p>도쿄 실크 클리닉 공식 가격표의 온라인 5mg는 2–5개월 처방 때 4개에 14,980엔이고, 진료비와 일반 배송비가 포함된다고 적습니다. 3개월분은 44,940엔입니다. 2026년 11월 13일 참고 환율이면 약 37만 5천원입니다. 오키나와·낙도 추가 배송비는 별도라고만 적혀 있고, 1,000엔이라는 금액은 그 가격표에 없습니다. 교통비도 빠졌습니다. 커뮤니티 글의 영수증은 확인하지 않았습니다. <a href="https://tokyosilkclinic.com/menu/909/" target="_blank" rel="noopener noreferrer">도쿄 실크 클리닉 가격표</a></p>
       <p>일본 후생노동성 장관은 2026년 10월 9일, 외국인 여행객이 귀국 뒤에 쓰도록 긴 기간의 약을 처방하는 것은 환자 안전 면에서도 적절하지 않다고 말했습니다. <a href="https://news.ntv.co.jp/category/society/5dffc0c9ab694c6bbebcce7d71a0057b" target="_blank" rel="noopener noreferrer">닛테레 뉴스 2026년 10월 9일</a></p>
@@ -1674,7 +1686,7 @@ def build_about():
     body = """<h1>정보 수집 기준과 수정</h1>
       <p>마운자로 원정대는 일본 의료기관이 공개한 마운자로 상담 정보와 연락처를 한국어로 모은 독립 안내입니다. 의료기관이 아니고, 특정 기관과 제휴하거나 진료·예약·결제를 대신하지 않습니다. 운영자의 실명과 자격은 이 페이지에 적지 않습니다.</p>
       <h2>무엇을 기준으로 적나</h2>
-      <p>기관 카드의 주소, 연락처, 운영시간, 상담 조건은 각 기관 공식 페이지의 문장을 확인한 범위만 적습니다. 카드마다 확인일이 있습니다. 처음 18곳은 2026년 11월 11일, FONTANA·MIL·세타가야 Mirai·Japan Net Clinic은 2026년 11월 12일입니다. HANI CLINIC 주소는 2026년 11월 16일에 다시 확인했습니다.</p>
+      <p>기관 카드의 주소, 연락처, 운영시간, 상담 조건은 각 기관 공식 페이지의 문장을 확인한 범위만 적습니다. 카드마다 확인일이 있습니다. 처음 18곳은 2026년 11월 11일, MIL·세타가야 Mirai·Japan Net Clinic은 2026년 11월 12일입니다. HANI CLINIC 주소는 2026년 11월 16일, FONTANA CLINIC Tenjin은 2026년 11월 18일에 다시 확인했습니다.</p>
       <p>공식 페이지에 없는 가격, 순위, 추천, 처방 성공률은 만들지 않습니다. 비용 페이지의 금액은 약가와 보도된 공급가, 가격 비교 서비스의 수집 평균을 출처와 함께 둔 추산입니다.</p>
       <h2>틀린 내용</h2>
       <p>바뀌었거나 틀린 곳은 <a href="mailto:moonblind@daum.net">moonblind@daum.net</a>으로 알려 주면 공식 페이지를 다시 보고 고칩니다. 제보가 곧 그 내용이 맞다는 확인은 아닙니다.</p>
